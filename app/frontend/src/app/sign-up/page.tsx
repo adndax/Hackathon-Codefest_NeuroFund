@@ -1,6 +1,26 @@
+'use client';
 
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function SignUpPage() {
+  const router = useRouter();
+  const { setLogin, setUser } = useAuth();
+
+  const handleSignUpInvestor = () => {
+    const user = { name: "Adinda", role: "Investor" };
+    setUser(user);    
+    setLogin(true);  
+    router.push("/investor");
+  };
+
+  const handleSignUpResearcher = () => {
+    const user = { name: "Adinda", role: "Researcher" };
+    setUser(user);    
+    setLogin(true);  
+    router.push("/researcher");
+  };
+
   return (
     <div className="flex min-h-screen bg-[#1a2a44] text-white font-sans flex-col items-center justify-center">
       {/* Judul */}
@@ -16,7 +36,7 @@ export default function SignUpPage() {
           <p className="text-base leading-relaxed text-center mb-5 h-32 overflow-hidden">
             Gain early access to groundbreaking research and support innovative projects. Connect with talented researchers, invest in ideas with impact, and help shape the future.
           </p>
-          <button className="w-full max-w-xs p-3 text-white rounded-lg text-base bg-[#4a6fa5] hover:bg-[#3a5f95]">
+          <button onClick={handleSignUpInvestor} className="w-full max-w-xs p-3 text-white rounded-lg text-base bg-[#4a6fa5] hover:bg-[#3a5f95]">
             Sign up as Investor
           </button>
         </div>
@@ -29,7 +49,7 @@ export default function SignUpPage() {
           <p className="text-base leading-relaxed text-center mb-5 h-32 overflow-hidden">
           Showcase your innovative work, find funding opportunities, and collaborate with investors who believe in your vision. Turn your research into real-world impact.
           </p>
-          <button className="w-full max-w-xs p-3 text-white rounded-lg text-base bg-[#4a6fa5] hover:bg-[#3a5f95]">
+          <button onClick={handleSignUpResearcher} className="w-full max-w-xs p-3 text-white rounded-lg text-base bg-[#4a6fa5] hover:bg-[#3a5f95]">
             Sign up as Researcher
           </button>
         </div>
