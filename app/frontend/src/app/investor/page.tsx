@@ -4,6 +4,8 @@ import NavbarComponent from "@/components/NavbarComponents";
 import {Header, Paragraph} from "@/components/Typography";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+
+
 export default function InvestorPage() {
   const { isLoggedIn, user } = useAuth();
   const router = useRouter();
