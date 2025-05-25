@@ -13,19 +13,19 @@ export const navItemsLoggedIn= [
 export const icons = [
     {
         name: "Edit",
-        src: "/pen_new_square.svg",
+        src: "/Edit.png",
         alt: "Edit",
         link: "/upload-researcher"
     },
     {
         name: "Message",
-        src: "/chat_round_line.svg",
+        src: "/Message.png",
         alt: "Message",
         link: "#"
     },
     {
         name: "Notifications",
-        src: "/bell_ring.svg",
+        src: "/Notifications.png",
         alt: "Notifications",
         link: "#"
     },
@@ -39,18 +39,22 @@ export const benefitsData = [
       {
         title: "Exclusive Access",
         desc: "Discover high-potential research early",
+        icon: "asset8.png",
       },
       {
         title: "Vetted Opportunities",
         desc: "Engage with credible, curated projects",
+        icon: "asset5.png",
       },
       {
         title: "Impact Investment",
         desc: "Support innovation and societal progress",
+        icon: "asset2.png",
       },
       {
         title: "Seamless Funding",
         desc: "Invest easily through our secure platform",
+        icon: "asset3.png",
       },
     ],
   },
@@ -60,18 +64,22 @@ export const benefitsData = [
       {
         title: "Funding Access",
         desc: "Connect with investors passionate about research",
+        icon: "asset7.png",
       },
       {
         title: "Research Focus",
         desc: "Secure funding and focus on impactful work",
+        icon: "asset1.png",
       },
       {
         title: "Partnership Growth",
         desc: "Build lasting, supportive relationships",
+        icon: "asset6.png",
       },
       {
         title: "Enhanced Visibility",
         desc: "Showcase your research to a wider audience",
+        icon: "asset4.png",
       },
     ],
   },
@@ -109,7 +117,7 @@ export const researchList = [
     description: "Social cohesion, the interpersonal attraction and relationships among team members, are often positively associated with athlete engagement. Mental toughness (MT) is linked to both social cohesion and engagement, but how different MT session formats influence this relationship remains unclear. Individual consulting allows for greater customization.",
     author: "Adinda Putri",
     date: "28 April 2025",
-    likes: 101,
+    likes: 105,
   },
   {
     id: 2,
@@ -117,7 +125,7 @@ export const researchList = [
     description: "Social cohesion, the interpersonal attraction and relationships among team members, are often positively associated with athlete engagement. Mental toughness (MT) is linked to both social cohesion and engagement, but how different MT session formats influence this relationship remains unclear. Individual consulting allows for greater customization.",
     author: "Adinda Putri",
     date: "28 April 2025",
-    likes: 101,
+    likes: 100,
   },
   {
     id: 3,
@@ -133,7 +141,7 @@ export const researchList = [
     description: "Social cohesion, the interpersonal attraction and relationships among team members, are often positively associated with athlete engagement. Mental toughness (MT) is linked to both social cohesion and engagement, but how different MT session formats influence this relationship remains unclear. Individual consulting allows for greater customization.",
     author: "Adinda Putri",
     date: "28 April 2025",
-    likes: 101,
+    likes: 104,
   },
   {
     id: 5,
