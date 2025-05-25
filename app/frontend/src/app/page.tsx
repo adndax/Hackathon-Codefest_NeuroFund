@@ -4,8 +4,15 @@ import { navItemsUnloggedIn } from "@data";
 import { BlueButton } from "@/components/Button";
 import { FeaturePlaceholder } from "@/components/FeaturePlaceholder";
 import { Header,Paragraph } from "@/components/Typography";
+import { useRouter } from 'next/navigation';
 
 export default function LandingPage() {
+  const router = useRouter();
+
+  const handleButtonClick = () => {
+    router.push("/sign-up");
+  };
+
   return (
   <>
   <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={false}/>
