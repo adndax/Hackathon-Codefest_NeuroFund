@@ -1,7 +1,7 @@
 "use client";
 
 import { NavigationBar } from "@/components/Navbar";
-import { navItemsUnloggedIn } from "@data";
+import { navItemsLoggedIn } from "@data";
 import {Header, Paragraph} from "@/components/Typography";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -35,6 +35,7 @@ export default function ResearcherPage() {
     <div>
 
       <div className="w-4xl mx-auto">
+        <NavigationBar navItems={navItemsLoggedIn} current_item="Research" login={true}/>
         <div className="pt-30 flex flex-col">
           {/* Bagian Atas */}
           <Header className="w-full mx-auto">Search Research. Spark Impact.</Header>
