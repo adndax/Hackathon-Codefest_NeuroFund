@@ -2,12 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { FiEdit, FiMessageCircle, FiBell } from "react-icons/fi";
 import { Header, Paragraph } from "@/components/Typography"
 import { NavigationBar, PannelIcon } from "@/components/Navbar";
 import { navItemsUnloggedIn } from "@data";
+import { useRouter } from "next/navigation";
 
 export default function UploadResearcherPage() {
+
+  const router = useRouter();
+
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
@@ -24,6 +29,21 @@ export default function UploadResearcherPage() {
       link: "/research"
     }
   ];
+
+  const handleFilesUpload = (files: FileList | null) => {
+    if (!files) return;
+    const fileArray = Array.from(files);
+    const updatedFiles = [...uploadedFiles, ...fileArray];
+    setUploadedFiles(updatedFiles);
+
+    if (updatedFiles.length === 1) {
+      setTimeout(() => {
+        router.push("/upload-2-researcher");
+      }, 500); 
+    }
+  };
+
+
 
   return (
         <>
@@ -47,13 +67,43 @@ export default function UploadResearcherPage() {
         <Header>Share Your Research with the World</Header>
         <Paragraph className="font-normal text-[#A7C4EC] mt-3 mb-8">Showcase your breakthroughs and unlock new opportunities.</Paragraph>
 
-        {/* Upload Area */}
-        <div className="bg-foreground/85 text-gray-600 rounded-xl p-16 mb-8 mx-30">
-          <button className="bg-primary text-foreground font-inter font-semibold px-6 py-3 rounded-md mb-4 cursor-pointer hover:bg-[#2458a5] transition-colors">
-            Select documents to upload
-          </button>
-          <p className="text-primary font-semibold font-inter">or drag & drop</p>
+    {/* Upload Area */}
+    <div
+      className="bg-foreground/85 text-gray-600 rounded-xl p-16 mb-8 mx-30 flex flex-col items-center justify-center border-2 border-dashed border-gray-500 hover:border-primary transition-colors"
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={(e) => {
+        e.preventDefault();
+        handleFilesUpload(e.dataTransfer.files);
+      }}
+    >
+      <input
+        id="file-upload"
+        type="file"
+        className="hidden"
+        multiple
+        onChange={(e) => handleFilesUpload(e.target.files)}
+      />
+
+      <label
+        htmlFor="file-upload"
+        className="bg-primary text-foreground font-inter font-semibold px-6 py-3 rounded-md mb-4 cursor-pointer hover:bg-[#2458a5] transition-colors"
+      >
+        Select documents to upload
+      </label>
+      <p className="text-primary font-semibold font-inter">or drag & drop</p>
+
+      {/* Daftar file yang diunggah secara dummy */}
+      {uploadedFiles.length > 0 && (
+        <div className="mt-6 w-full text-left">
+          <h3 className="text-sm font-bold mb-2 text-black">Uploaded files:</h3>
+          <ul className="text-sm list-disc pl-5 space-y-1 text-black">
+            {uploadedFiles.map((file, index) => (
+              <li key={index}>{file.name}</li>
+            ))}
+          </ul>
         </div>
+      )}
+    </div>
 
         {/* File Information */}
         <p className="text-sm text-[#A7C4EC] font-inter mb-2">
