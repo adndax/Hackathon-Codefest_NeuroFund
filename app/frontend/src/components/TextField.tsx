@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 
 export const InputText = ({ children, className, label, value, onChange}: {children: React.ReactNode, className?: string, label: string, value: string, onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void}) => {
     return (
