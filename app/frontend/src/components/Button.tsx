@@ -8,12 +8,13 @@ export const BlueButton = ({ children, className}: {children: React.ReactNode, c
     )
 }
 
-export const NextDelButton = ({ children, className}: {children: React.ReactNode, className?: string}) => {
-    return (
-        <button
-            className={cn("px-8.5 py-2 text-foreground font-bold hover:bg-tertiary rounded-md hover:text-background transition-colors cursor-pointer", className)}
-        >
-            {children}
-        </button>
-    )
-}
+export const NextDelButton = ({ children, className, onClick }: { children: React.ReactNode, className?: string, onClick?: () => void }) => {
+  return (
+    <button
+      onClick={onClick}
+      className={cn("px-8.5 py-2 text-foreground font-bold hover:bg-tertiary rounded-md hover:text-background transition-colors cursor-pointer", className)}
+    >
+      {children}
+    </button>
+  );
+};

@@ -47,7 +47,7 @@ export default function UploadResearcherPage() {
 
             <div className="w-full md:w-full space-y-6 mt-5">
               <InputText label="title" value={formData.title} placeholder="Enter a title" onChange={handleChange}>Title*</InputText>
-              <InputText label="topic" value={formData.topic} placeholder="Enter a topic" onChange={handleChange}>Topic</InputText>
+              <InputText label="topic" value={formData.topic} placeholder="Enter number of tokens" onChange={handleChange}>Topic</InputText>
               <TextArea label="description" value={formData.description} placeholder="Enter a description" onChange={handleChange} rows={6}>Description</TextArea>
             </div>
           </div>
