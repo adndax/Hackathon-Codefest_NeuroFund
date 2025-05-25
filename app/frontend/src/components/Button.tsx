@@ -35,6 +35,7 @@ export const NextDelButton = ({ children, className, ...props }: NextDelButtonPr
         className
       )}
       {...props}
+
     >
       {children}
     </button>

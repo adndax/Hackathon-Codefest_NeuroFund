@@ -39,18 +39,22 @@ export const benefitsData = [
       {
         title: "Exclusive Access",
         desc: "Discover high-potential research early",
+        icon: "asset8.png",
       },
       {
         title: "Vetted Opportunities",
         desc: "Engage with credible, curated projects",
+        icon: "asset5.png",
       },
       {
         title: "Impact Investment",
         desc: "Support innovation and societal progress",
+        icon: "asset2.png",
       },
       {
         title: "Seamless Funding",
         desc: "Invest easily through our secure platform",
+        icon: "asset3.png",
       },
     ],
   },
@@ -60,18 +64,22 @@ export const benefitsData = [
       {
         title: "Funding Access",
         desc: "Connect with investors passionate about research",
+        icon: "asset7.png",
       },
       {
         title: "Research Focus",
         desc: "Secure funding and focus on impactful work",
+        icon: "asset1.png",
       },
       {
         title: "Partnership Growth",
         desc: "Build lasting, supportive relationships",
+        icon: "asset6.png",
       },
       {
         title: "Enhanced Visibility",
         desc: "Showcase your research to a wider audience",
+        icon: "asset4.png",
       },
     ],
   },
