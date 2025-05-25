@@ -1,6 +1,7 @@
 "use client";
 
-import NavbarComponent from "@/components/NavbarComponents";
+import { NavigationBar } from "@/components/Navbar";
+import { navItemsUnloggedIn } from "@data";
 import {Header, Paragraph} from "@/components/Typography";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -32,8 +33,6 @@ export default function ResearcherPage() {
   ]
   return(
     <div>
-      {/* Bagian navbar */}
-      <NavbarComponent />
 
       <div className="w-4xl mx-auto">
         <div className="pt-30 flex flex-col">
