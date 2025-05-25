@@ -100,4 +100,47 @@ export const testimonials = [
     title: "“A New Standard for Research Funding”",
   },
 ];
-  
+
+
+export const researchList = [
+  {
+    id: 1,
+    title: "Statistical Learning-Based Analysis of Human Driver Model Parameters",
+    description: "Social cohesion, the interpersonal attraction and relationships among team members, are often positively associated with athlete engagement. Mental toughness (MT) is linked to both social cohesion and engagement, but how different MT session formats influence this relationship remains unclear. Individual consulting allows for greater customization.",
+    author: "Adinda Putri",
+    date: "28 April 2025",
+    likes: 101,
+  },
+  {
+    id: 2,
+    title: "Statistical Learning-Based Analysis of Human Driver Model Parameters",
+    description: "Social cohesion, the interpersonal attraction and relationships among team members, are often positively associated with athlete engagement. Mental toughness (MT) is linked to both social cohesion and engagement, but how different MT session formats influence this relationship remains unclear. Individual consulting allows for greater customization.",
+    author: "Adinda Putri",
+    date: "28 April 2025",
+    likes: 101,
+  },
+  {
+    id: 3,
+    title: "Statistical Learning-Based Analysis of Human Driver Model Parameters",
+    description: "Social cohesion, the interpersonal attraction and relationships among team members, are often positively associated with athlete engagement. Mental toughness (MT) is linked to both social cohesion and engagement, but how different MT session formats influence this relationship remains unclear. Individual consulting allows for greater customization.",
+    author: "Adinda Putri",
+    date: "28 April 2025",
+    likes: 101,
+  },
+  {
+    id: 4,
+    title: "Statistical Learning-Based Analysis of Human Driver Model Parameters",
+    description: "Social cohesion, the interpersonal attraction and relationships among team members, are often positively associated with athlete engagement. Mental toughness (MT) is linked to both social cohesion and engagement, but how different MT session formats influence this relationship remains unclear. Individual consulting allows for greater customization.",
+    author: "Adinda Putri",
+    date: "28 April 2025",
+    likes: 101,
+  },
+  {
+    id: 5,
+    title: "Statistical Learning-Based Analysis of Human Driver Model Parameters",
+    description: "Social cohesion, the interpersonal attraction and relationships among team members, are often positively associated with athlete engagement. Mental toughness (MT) is linked to both social cohesion and engagement, but how different MT session formats influence this relationship remains unclear. Individual consulting allows for greater customization.",
+    author: "Adinda Putri",
+    date: "28 April 2025",
+    likes: 101,
+  },
+];
