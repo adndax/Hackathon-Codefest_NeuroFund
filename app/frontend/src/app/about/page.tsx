@@ -36,16 +36,15 @@ export default function AboutPage(){
                 </div>
               ))}
             </div>
-      
-            <div className="w-screen bg-gradient-to-b from-[#001124]/60 to-[#225491]/60 py-25">
-            <div className="flex flex-col items-center justify-center text-center px-4">
-              <Header>Bridge the Future with Us</Header>
-              <Paragraph className="font-light mt-5 max-w-2xl">
-                Fund innovation, empower research, and create lasting impact today.
-              </Paragraph>
-            </div>
+        </section>
+        <div className="w-screen bg-gradient-to-b from-[#001124]/60 to-[#225491]/60 py-25">
+          <div className="flex flex-col items-center justify-center text-center px-4">
+            <Header>Bridge the Future with Us</Header>
+            <Paragraph className="font-light mt-5 max-w-2xl">
+              Fund innovation, empower research, and create lasting impact today.
+            </Paragraph>
           </div>
-          </section>
+        </div>
     </>
   );
 }
