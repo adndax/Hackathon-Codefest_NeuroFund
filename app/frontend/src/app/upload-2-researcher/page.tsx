@@ -6,8 +6,13 @@ import { useState } from "react";
 import { ImageIcon } from "lucide-react";
 import { NextDelButton } from "@/components/Button";
 import { InputText, TextArea } from "@/components/TextField";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function UploadResearcherPage() {
+  const router = useRouter();
+  const { setLogin, setUser } = useAuth();
+
   const [formData, setFormData] = useState({
     title: "",
     topic: "",
@@ -23,13 +28,14 @@ export default function UploadResearcherPage() {
   };
 
   const handleSubmit = () => {
-    console.log("Form submitted:", formData);
-    // Add submission logic here
+    router.push("/upload-4-researcher");
   };
 
   const handleDelete = () => {
-    console.log("Delete requested");
-    // Add deletion logic here
+    const user = { name: "Adinda", role: "Researcher" };
+    setUser(user);
+    setLogin(true);
+    router.push("/researcher-profile");
   };
   
   return (
@@ -53,8 +59,8 @@ export default function UploadResearcherPage() {
           </div>
 
           <div className="flex justify-end gap-4 pt-7">
-            <NextDelButton>Delete</NextDelButton>
-            <NextDelButton className="bg-primary">Next</NextDelButton>
+            <NextDelButton onClick={handleDelete}>Delete</NextDelButton>
+            <NextDelButton onClick={handleSubmit} className="bg-primary">Next</NextDelButton>
           </div>
         </div>
       </div>
