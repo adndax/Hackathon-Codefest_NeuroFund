@@ -30,9 +30,9 @@ export default function Publication(){
             </div>
 
             {/* Tombol Tengah */}
-            <button className="absolute left-1/2 -translate-x-1/2 h-10 bg-[#A7C4EC] rounded-full px-4 py-2 font-semibold text-xs text-[#011224]">
+            {/* <button className="absolute left-1/2 -translate-x-1/2 h-10 bg-[#A7C4EC] rounded-full px-4 py-2 font-semibold text-xs text-[#011224]">
                 Fund this research
-            </button>
+            </button> */}
 
             {/* Kanan: Stats */}
             <div className="flex gap-4 items-center">
