@@ -1,6 +1,7 @@
 "use client";
 
-import NavbarComponent from "@/components/NavbarComponents";
+import { NavigationBar } from "@/components/Navbar";
+import { navItemsUnloggedIn } from "../../../data/data";
 import {Header, Paragraph} from "@/components/Typography";
 import Card from "./card";
 import { researchList } from "../../../data/data";
@@ -43,7 +44,7 @@ export default function ResearchPage() {
   return (
     <div>
       {/* Bagian Navbar */}
-      <NavbarComponent />
+      <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={false}/>
 
       <div className="max-w-7xl mx-auto">
         {/* Bagian Atas */}
