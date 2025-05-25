@@ -1,6 +1,6 @@
 "use client";
 import { NavigationBar }  from "@/components/Navbar";
-import { navItemsUnloggedIn } from "../../data/data";
+import { navItemsUnloggedIn } from "@data";
 import { BlueButton } from "@/components/Button";
 import { FeaturePlaceholder } from "@/components/FeaturePlaceholder";
 import { Header,Paragraph } from "@/components/Typography";

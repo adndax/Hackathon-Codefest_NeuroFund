@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { FiEdit, FiMessageCircle, FiBell } from "react-icons/fi";
 import { Header, Paragraph } from "@/components/Typography"
-import { Navbar, NavBody, NavItems, MobileNav, MobileNavHeader, MobileNavMenu, MobileNavToggle, NavbarLogo, NavbarButton, PannelIcon, PannelIconMobile } from "@/components/Navbar";
+import { NavigationBar, PannelIcon } from "@/components/Navbar";
+import { navItemsUnloggedIn } from "@data";
 
 export default function UploadResearcherPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -26,17 +27,11 @@ export default function UploadResearcherPage() {
 
   return (
         <>
-      {/* Menggunakan struktur Navbar yang sudah ada */}
-      <Navbar>
-        <NavBody>
-        <NavbarLogo />
-          
-          {/* Menggunakan NavItems yang sudah ada */}
-          <NavItems items={navItems} name=" "/>
+        <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={false}/>
           
           {/* Panel user dengan ikon-ikon dan avatar */}
           <div className="flex items-center gap-6">
-            <PannelIcon name="Edit"/>
+            <PannelIcon name="Edit" login={false}/>
             <div className="flex items-center bg-white bg-opacity-10 rounded-full px-5 py-1.5">
               <div className="w-11 h-11 rounded-full bg-[#E6C798] flex items-center justify-center text-gray-800 font-medium mr-2">
               </div>
@@ -46,35 +41,6 @@ export default function UploadResearcherPage() {
               </div>
             </div>
           </div>
-        </NavBody>
-
-        {/* Mobile Navbar sesuai struktur yang ada */}
-        <MobileNav>
-          <MobileNavHeader>
-            <NavbarLogo />
-            <MobileNavToggle
-              isOpen={isMobileMenuOpen}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            />
-          </MobileNavHeader>
- 
-          <MobileNavMenu
-            isOpen={isMobileMenuOpen}
-            onClose={() => setIsMobileMenuOpen(false)}
-          >
-            {navItems.map((item, idx) => (
-              <a
-                key={`mobile-link-${idx}`}
-                href={item.link}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <span className="block text-foreground cursor-pointer">{item.name}</span>
-              </a>
-            ))}
-            <PannelIconMobile name="Edit"/>
-          </MobileNavMenu>
-        </MobileNav>
-      </Navbar>
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-40 text-center">

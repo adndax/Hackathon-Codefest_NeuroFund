@@ -1,10 +1,10 @@
 "use client";
 
-import NavbarComponent from "@/components/NavbarComponents";
+import { NavigationBar } from "@/components/Navbar";
+import { navItemsUnloggedIn, researchList } from "@data";
 import { Header, Paragraph } from "@/components/Typography";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { researchList } from "../../../../data/data";
 import Modal from "../modal";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
@@ -64,7 +64,7 @@ export default function ResearchDetailPage() {
   return (
     <div className="bg-gray-900 text-white">
       {/* Bagian Navbar */}
-      <NavbarComponent />
+      <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={false}/>
 
       <div className="max-w-4xl mx-auto py-10 px-5">
         {/* Judul Penelitian */}

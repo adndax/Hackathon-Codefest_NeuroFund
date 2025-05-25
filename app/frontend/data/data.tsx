@@ -1,11 +1,11 @@
 {/*Navbar*/}
 export const navItemsUnloggedIn = [
-    { name: "Home", link: "/home" },
+    { name: "Home", link: "/" },
     { name: "About", link: "/about" },
 ];
 
 export const navItemsLoggedIn= [
-    { name: "Home", link: "/home" },
+    { name: "Home", link: "/" },
     { name: "About", link: "/about" },
     { name: "Research", link: "/research" },
 ];
