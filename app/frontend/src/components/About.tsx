@@ -1,10 +1,10 @@
 import React from "react";
 import { Header, Paragraph } from "./Typography";
-import { benefitsData, testimonials } from "@/app/data/data";
+import { benefitsData, testimonials } from "@data";
 
 export const AboutSection = () =>{
     return (
-        <section className="flex items-center justify-center min-h-screen bg-gradient-to-r from-[#0a1526] to-[#0e1c33] text-white px-6 py-12 pr-10">
+        <section className="flex items-center justify-center min-h-screen text-white px-6 py-12 pr-10">
             <div className="w-full max-w-7xl flex flex-col lg:flex-row items-center lg:items-center gap-8 h-full">
             {/* Judul */}
             <div className="lg:w-1/3 text-center lg:text-left">
@@ -56,7 +56,8 @@ export const Benefit = () => {
             {section.items.map((item) => (
               <div key={item.title} className="flex flex-col items-center justify-between gap-2 sm:gap-3 h-full">
                 {/* Placeholder Icon */}
-                <div className="w-20 h-20 sm:w-25 sm:h-25 bg-gray-300 rounded-md mt-4 sm:mt-8" />
+                {/* <div className="w-20 h-20 sm:w-25 sm:h-25 bg-gray-300 rounded-md mt-4 sm:mt-8" /> */}
+                <img src={item.icon} className="w-20 h-20"/>
                 <div className="font-semibold font-inter text-foregroundtext-sm sm:text-base">
                   {item.title}
                 </div>
@@ -97,12 +98,14 @@ export const Testimonials = () => {
         ))}
       </div>
 
-      <div className="mt-45 bg-gradient-to-b from-[#001124]/60 to-[#225491]/60 py-25">
+      <div className="w-screen bg-gradient-to-b from-[#001124]/60 to-[#225491]/60 py-25">
+      <div className="flex flex-col items-center justify-center text-center px-4">
         <Header>Bridge the Future with Us</Header>
-        <Paragraph className="font-light mt-5">
+        <Paragraph className="font-light mt-5 max-w-2xl">
           Fund innovation, empower research, and create lasting impact today.
         </Paragraph>
       </div>
+    </div>
     </section>
   );
 };
