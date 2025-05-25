@@ -11,7 +11,7 @@ export default function AboutPage(){
   return (
     <>
       <NavigationBar navItems={navItemsUnloggedIn} current_item="About" login={false}/>
-      <FeaturePlaceholder className="pt-45" />
+        <FeaturePlaceholder className="pt-60" imageSrc="/asset-3d-2.png"/>
         <section className="flex items-center justify-center min-h-screen text-white px-6 py-12 pr-10">
               <div className="w-full max-w-7xl flex flex-col lg:flex-row items-center lg:items-center gap-8 h-full">
               {/* Judul */}
