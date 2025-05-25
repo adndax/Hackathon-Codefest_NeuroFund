@@ -7,7 +7,6 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-
 export default function InvestorProfile() {
   const { isLoggedIn, user } = useAuth();
   const router = useRouter();

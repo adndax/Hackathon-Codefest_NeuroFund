@@ -2,9 +2,9 @@
 
 import NavbarComponent from "@/components/NavbarComponents";
 import {Header, Paragraph} from "@/components/Typography";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-
 
 export default function InvestorPage() {
   const { isLoggedIn, user } = useAuth();
