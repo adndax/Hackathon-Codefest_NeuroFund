@@ -35,7 +35,7 @@ export default function ResearcherPage() {
     <div>
 
       <div className="w-4xl mx-auto">
-        <NavigationBar navItems={navItemsLoggedIn} current_item="Research" login={true}/>
+        <NavigationBar navItems={navItemsLoggedIn} current_item="Research" login={true} role="Researcher"/>
         <div className="pt-30 flex flex-col">
           {/* Bagian Atas */}
           <Header className="w-full mx-auto">Search Research. Spark Impact.</Header>
