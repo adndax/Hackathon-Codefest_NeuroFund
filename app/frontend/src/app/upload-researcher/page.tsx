@@ -1,47 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { FiEdit, FiMessageCircle, FiBell } from "react-icons/fi";
 import { Header, Paragraph } from "@/components/Typography"
 import { NavigationBar, PannelIcon } from "@/components/Navbar";
 import { navItemsUnloggedIn } from "@data";
 
 export default function UploadResearcherPage() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const navItems = [
-    {
-      name: "Home",
-      link: "/home",
-    },
-    {
-      name: "About",
-      link: "/about",
-    },
-    {
-      name: "Research",
-      link: "/research"
-    }
-  ];
 
   return (
         <>
-        <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={false}/>
-          
-          {/* Panel user dengan ikon-ikon dan avatar */}
-          <div className="flex items-center gap-6">
-            <PannelIcon name="Edit" login={false}/>
-            <div className="flex items-center bg-white bg-opacity-10 rounded-full px-5 py-1.5">
-              <div className="w-11 h-11 rounded-full bg-[#E6C798] flex items-center justify-center text-gray-800 font-medium mr-2">
-              </div>
-              <div className="hidden sm:block px-1">
-                <div className="text-sm font-inter text-[#001124]/80 font-medium">Hi, Adinda!</div>
-                <div className="text-sm font-inter text-[#001124]/80 font-bold">Researcher</div>
-              </div>
-            </div>
-          </div>
-
+        <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={true} role="Researcher"/>
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-40 text-center">
         <Header>Share Your Research with the World</Header>

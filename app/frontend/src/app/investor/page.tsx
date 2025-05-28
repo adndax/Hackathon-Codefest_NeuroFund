@@ -34,7 +34,7 @@ export default function InvestorPage() {
   return(
     <div>
       {/* Bagian navbar */}
-      <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={false}/>
+      <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={true} role="Investor"/>
 
       <div className="w-4xl mx-auto">
         <div className="pt-30 flex flex-col">

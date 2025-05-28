@@ -10,7 +10,7 @@ export const navItemsLoggedIn= [
     { name: "Research", link: "/research" },
 ];
 
-export const icons = [
+export const researcherIcons = [
     {
         name: "Edit",
         src: "/pen_new_square.svg",
@@ -30,6 +30,29 @@ export const icons = [
         link: "#"
     },
 ];
+
+export const investorIcons = [
+    {
+        name: "Wallet",
+        src: "/wallet.svg",
+        alt: "Wallet",
+        link: "#"
+    },
+    {
+        name: "Message",
+        src: "/chat_round_line.svg",
+        alt: "Message",
+        link: "#"
+    },
+    {
+        name: "Notifications",
+        src: "/bell_ring.svg",
+        alt: "Notifications",
+        link: "#"
+    },
+];
+
+
   
 {/*About Page*/}
 export const benefitsData = [
