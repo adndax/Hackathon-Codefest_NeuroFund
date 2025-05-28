@@ -6,10 +6,15 @@ import { navItemsLoggedIn } from "../../../data/data";
 import { ImageIcon } from "lucide-react";
 import { NextDelButton } from "@/components/Button";
 import { InputText, TextArea } from "@/components/TextField";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import { Modal } from "@/components/Modal";
 import Image from 'next/image';
 
 export default function UploadResearcherPage() {
+  const router = useRouter();
+  const { setLogin, setUser } = useAuth();
+
   const [formData, setFormData] = useState({
     title: "",
     topic: "",
@@ -27,12 +32,20 @@ export default function UploadResearcherPage() {
     }));
   };
 
+  const handleSubmit = () => {
+    router.push("/upload-4-researcher");
+  };
+
+  const handleDelete = () => {
+    const user = { name: "Adinda", role: "Researcher" };
+    setUser(user);
+    setLogin(true);
+    router.push("/researcher-profile");
+      
   const handleNext = () => {
     setShowModal(true);
   };
 
-  const handleDelete = () => {
-    setShowModal(false);
   };
 
   useEffect(() => {
@@ -64,7 +77,7 @@ export default function UploadResearcherPage() {
 
           <div className="flex justify-end gap-4 pt-7">
             <NextDelButton onClick={handleDelete}>Delete</NextDelButton>
-            <NextDelButton className="bg-primary" onClick={handleNext}>Next</NextDelButton>
+            <NextDelButton onClick={handleSubmit} className="bg-primary">Next</NextDelButton>
           </div>
         </div>
       </div>
