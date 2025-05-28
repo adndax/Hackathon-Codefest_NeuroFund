@@ -1,81 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { FiEdit, FiMessageCircle, FiBell } from "react-icons/fi";
 import { Header, Paragraph } from "@/components/Typography"
-import { Navbar, NavBody, NavItems, MobileNav, MobileNavHeader, MobileNavMenu, MobileNavToggle, NavbarLogo, NavbarButton, PannelIcon, PannelIconMobile } from "@/components/Navbar";
+import { NavigationBar, PannelIcon } from "@/components/Navbar";
+import { navItemsUnloggedIn } from "@data";
 
 export default function UploadResearcherPage() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const navItems = [
-    {
-      name: "Home",
-      link: "/home",
-    },
-    {
-      name: "About",
-      link: "/about",
-    },
-    {
-      name: "Research",
-      link: "/research"
-    }
-  ];
 
   return (
         <>
-      {/* Menggunakan struktur Navbar yang sudah ada */}
-      <Navbar>
-        <NavBody>
-        <NavbarLogo />
-          
-          {/* Menggunakan NavItems yang sudah ada */}
-          <NavItems items={navItems} name=" "/>
-          
-          {/* Panel user dengan ikon-ikon dan avatar */}
-          <div className="flex items-center gap-6">
-            <PannelIcon name="Edit"/>
-            <div className="flex items-center bg-white bg-opacity-10 rounded-full px-5 py-1.5">
-              <div className="w-11 h-11 rounded-full bg-[#E6C798] flex items-center justify-center text-gray-800 font-medium mr-2">
-              </div>
-              <div className="hidden sm:block px-1">
-                <div className="text-sm font-inter text-[#001124]/80 font-medium">Hi, Adinda!</div>
-                <div className="text-sm font-inter text-[#001124]/80 font-bold">Researcher</div>
-              </div>
-            </div>
-          </div>
-        </NavBody>
-
-        {/* Mobile Navbar sesuai struktur yang ada */}
-        <MobileNav>
-          <MobileNavHeader>
-            <NavbarLogo />
-            <MobileNavToggle
-              isOpen={isMobileMenuOpen}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            />
-          </MobileNavHeader>
- 
-          <MobileNavMenu
-            isOpen={isMobileMenuOpen}
-            onClose={() => setIsMobileMenuOpen(false)}
-          >
-            {navItems.map((item, idx) => (
-              <a
-                key={`mobile-link-${idx}`}
-                href={item.link}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <span className="block text-foreground cursor-pointer">{item.name}</span>
-              </a>
-            ))}
-            <PannelIconMobile name="Edit"/>
-          </MobileNavMenu>
-        </MobileNav>
-      </Navbar>
-
+        <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={true} role="Researcher"/>
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-40 text-center">
         <Header>Share Your Research with the World</Header>

@@ -1,6 +1,7 @@
 "use client";
 
-import NavbarComponent from "@/components/NavbarComponents";
+import { NavigationBar } from "@/components/Navbar";
+import { navItemsUnloggedIn } from "@data";
 import {Header, Paragraph} from "@/components/Typography";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -33,7 +34,7 @@ export default function InvestorPage() {
   return(
     <div>
       {/* Bagian navbar */}
-      <NavbarComponent/>
+      <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={true} role="Investor"/>
 
       <div className="w-4xl mx-auto">
         <div className="pt-30 flex flex-col">

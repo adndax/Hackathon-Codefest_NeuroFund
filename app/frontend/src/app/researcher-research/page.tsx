@@ -1,6 +1,7 @@
 "use client";
 
-import NavbarComponent from "@/components/NavbarComponents";
+import { NavigationBar } from "@/components/Navbar";
+import { navItemsUnloggedIn } from "../../../data/data";
 import {Header, Paragraph} from "@/components/Typography";
 import Card from "./card";
 import { researchList } from "../../../data/data"
@@ -34,6 +35,13 @@ export default function ResearchPage() {
     likes: number;
   }
 
+  const sortedResearchList = [...researchList].sort((a, b) => {
+    if (b.likes !== a.likes) {
+      return b.likes - a.likes;
+    }
+    return a.title.localeCompare(b.title);
+  });
+
   function createCard(research: ResearchItem) {
     return (
       <Card
@@ -51,7 +59,7 @@ export default function ResearchPage() {
   return (
     <div>
       {/* Bagian Navbar */}
-      <NavbarComponent />
+      <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={false}/>
 
       <div className="w-7xl mx-auto">
         {/* Bagian Atas */}
@@ -67,7 +75,7 @@ export default function ResearchPage() {
             />
             <button className="px-4 py-2 text-gray-400">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
               </svg>
             </button>
           </div>
@@ -77,7 +85,7 @@ export default function ResearchPage() {
             <button className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-[#225491] transition">
               <span>Sort by</span>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
               </svg>
             </button>
             <button className="px-4 py-2 rounded-lg bg-[#225491] transition">
@@ -88,7 +96,7 @@ export default function ResearchPage() {
 
         {/* Bagian Bawah */}
         <div className="research-list flex flex-wrap gap-10 place-content-center ">
-          {researchList.map(createCard)}
+          {sortedResearchList.map(createCard)}
         </div>
 
     </div>

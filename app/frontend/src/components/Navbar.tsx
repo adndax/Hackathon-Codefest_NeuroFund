@@ -5,9 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from 'next/link';
 import React, { useRef, useState } from "react";
-import { icons } from "@data";
+import { researcherIcons, investorIcons } from "@data";
 
-export const NavigationBar = ({current_item, navItems, login}: {current_item: string, navItems: { name: string; link: string }[], login: boolean }) => {
+export const NavigationBar = ({current_item, navItems, login, role}: {current_item: string, navItems: { name: string; link: string }[], login: boolean, role?: "Researcher" | "Investor";}) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   return (
@@ -17,12 +17,12 @@ export const NavigationBar = ({current_item, navItems, login}: {current_item: st
       
       <NavItems items={navItems} name={current_item}/>
       <div className="flex items-center gap-6">
-        <PannelIcon name={current_item} login={login}/>
+        <PannelIcon name={current_item} login={login} role={role}/>
         {!login && (<div className="flex items-center gap-4 mr-2">
           <NavbarButton href="/login">Login</NavbarButton>
           <NavbarButton href="/sign-up" variant="signup">Sign up</NavbarButton>
         </div>)}
-        <TopRightProfile login={login} />
+        <TopRightProfile login={login} role={role}/>
       </div>
     </NavBody>
 
@@ -66,7 +66,7 @@ export const NavigationBar = ({current_item, navItems, login}: {current_item: st
             Sign up
           </NavbarButton>
         </div>)}
-        <PannelIconMobile name={current_item} login={login}/>
+        <PannelIconMobile name={current_item} login={login} role={role}/>
       </MobileNavMenu>
     </MobileNav>
   </Navbar>
@@ -80,7 +80,7 @@ export const Navbar = ({ children, className }: {children: React.ReactNode, clas
   return (
     <motion.div
       ref={ref}
-      className={cn("fixed inset-x-10", className)}
+      className={cn("fixed inset-x-10 z-999", className)}
     >
       {React.Children.map(children, (child) =>
         React.isValidElement(child)
@@ -269,10 +269,13 @@ export const NavbarButton = ({ href, as: Tag = "a", children, className, variant
   );
 };
 
-export const PannelIcon = ({className, name, login}: {className?: string, name?: string, login: boolean}) => {
+export const PannelIcon = ({className, name, login, role}: {className?: string, name?: string, login: boolean, role?: "Researcher" | "Investor";}) => {
+
+  const selectedIcons = role == "Researcher" ? researcherIcons : investorIcons;
+
   return (
     <>
-      {icons.filter(i =>  login).map(i => (
+      {selectedIcons.filter(i =>  login).map(i => (
         <Link href={i.link} key={i.name}>
           <button className={`${i.name === name ? "p-3 bg-gradient-to-b from-[#A7C4EC]/40 to-[#5F6F86]/40 rounded-full cursor-pointer hover:-translate-y-0.5" : "cursor-pointer hover:-translate-y-0.5"}`}>
             <Image
@@ -289,11 +292,14 @@ export const PannelIcon = ({className, name, login}: {className?: string, name?:
   )
 }
 
-export const PannelIconMobile = ({className, name, login}: {className?: string, name?: string, login: boolean}) => {
+export const PannelIconMobile = ({className, name, login, role}: {className?: string, name?: string, login: boolean, role?: "Researcher" | "Investor";}) => {
+
+  const selectedIcons = role == "Researcher" ? researcherIcons : investorIcons;
+
   return (
     <>
     <div className="flex w-full flex-col gap-4">
-      {icons.filter(i => login).map((i) => (
+      {selectedIcons.filter(i => login).map((i) => (
         <Link href={i.link} key={i.name} className="flex flex-col items-center">
           <button className={`${i.name === name ? "w-full flex flex-col items-center p-3 bg-gradient-to-b from-[#A7C4EC]/40 to-[#5F6F86]/40 rounded-full cursor-pointer hover:-translate-y-0.5 hover:bg-primary" : "w-full flex flex-col items-center p-3 hover:bg-primary rounded-full cursor-pointer hover:-translate-y-0.5"}`}>
             <Image 
@@ -311,15 +317,16 @@ export const PannelIconMobile = ({className, name, login}: {className?: string, 
   )
 }
 
-export const TopRightProfile = ({login}: {login: boolean}) => {
+export const TopRightProfile = ({login, role}: {login: boolean, role?: "Researcher" | "Investor";}) => {
   return (
     <>
       {login && (<div className="flex items-center bg-white bg-opacity-10 rounded-full px-5 py-1.5">
         <div className="w-11 h-11 rounded-full bg-[#E6C798] flex items-center justify-center text-gray-800 font-medium mr-2">
+          {role?.[0] ?? ""}
         </div>
         <div className="hidden sm:block px-1">
           <div className="text-sm font-inter text-[#001124]/80 font-medium">Hi, Adinda!</div>
-          <div className="text-sm font-inter text-[#001124]/80 font-bold">Researcher</div>
+          <div className="text-sm font-inter text-[#001124]/80 font-bold">{role}</div>
         </div>
       </div>)
       }

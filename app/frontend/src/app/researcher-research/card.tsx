@@ -19,15 +19,25 @@ function Card({ id, title, content, author, date, likes }: CardProps) {
   const [count, setCount] = useState(likes);
 
   const handleLike = () => {
-    setCount(count + 1);
-    setLiked(!liked);
-    setDisliked(false);
+    if (!liked) {
+      setCount(count + 1);
+      setLiked(!liked);
+      setDisliked(false);
+    } else {
+      setCount(count - 1);
+      setLiked(false);
+    }
   };
 
   const handleDislike = () => {
-    setCount(count - 1);
-    setDisliked(!disliked);
-    setLiked(false);
+    if (!disliked) {
+      setCount(count - 1);
+      setDisliked(!disliked);
+      setLiked(false);
+    } else {
+      setCount(count + 1);
+      setDisliked(false);
+    }
   };
 
   const [bookmarked, setBookmarked] = useState(false);

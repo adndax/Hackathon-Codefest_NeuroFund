@@ -1,16 +1,16 @@
 {/*Navbar*/}
 export const navItemsUnloggedIn = [
-    { name: "Home", link: "/home" },
+    { name: "Home", link: "/" },
     { name: "About", link: "/about" },
 ];
 
 export const navItemsLoggedIn= [
-    { name: "Home", link: "/home" },
+    { name: "Home", link: "/" },
     { name: "About", link: "/about" },
     { name: "Research", link: "/research" },
 ];
 
-export const icons = [
+export const researcherIcons = [
     {
         name: "Edit",
         src: "/pen_new_square.svg",
@@ -30,6 +30,29 @@ export const icons = [
         link: "#"
     },
 ];
+
+export const investorIcons = [
+    {
+        name: "Wallet",
+        src: "/wallet.svg",
+        alt: "Wallet",
+        link: "#"
+    },
+    {
+        name: "Message",
+        src: "/chat_round_line.svg",
+        alt: "Message",
+        link: "#"
+    },
+    {
+        name: "Notifications",
+        src: "/bell_ring.svg",
+        alt: "Notifications",
+        link: "#"
+    },
+];
+
+
   
 {/*About Page*/}
 export const benefitsData = [
@@ -117,7 +140,7 @@ export const researchList = [
     description: "Social cohesion, the interpersonal attraction and relationships among team members, are often positively associated with athlete engagement. Mental toughness (MT) is linked to both social cohesion and engagement, but how different MT session formats influence this relationship remains unclear. Individual consulting allows for greater customization.",
     author: "Adinda Putri",
     date: "28 April 2025",
-    likes: 101,
+    likes: 105,
   },
   {
     id: 2,
@@ -125,7 +148,7 @@ export const researchList = [
     description: "Social cohesion, the interpersonal attraction and relationships among team members, are often positively associated with athlete engagement. Mental toughness (MT) is linked to both social cohesion and engagement, but how different MT session formats influence this relationship remains unclear. Individual consulting allows for greater customization.",
     author: "Adinda Putri",
     date: "28 April 2025",
-    likes: 101,
+    likes: 100,
   },
   {
     id: 3,
@@ -141,7 +164,7 @@ export const researchList = [
     description: "Social cohesion, the interpersonal attraction and relationships among team members, are often positively associated with athlete engagement. Mental toughness (MT) is linked to both social cohesion and engagement, but how different MT session formats influence this relationship remains unclear. Individual consulting allows for greater customization.",
     author: "Adinda Putri",
     date: "28 April 2025",
-    likes: 101,
+    likes: 104,
   },
   {
     id: 5,
