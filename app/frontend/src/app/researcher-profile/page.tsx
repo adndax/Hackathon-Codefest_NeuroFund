@@ -2,26 +2,32 @@
 
 import { useState } from "react";
 import {Header, Paragraph} from "@/components/Typography";
-import Card from "./card"
+import Card from "./card";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Link from 'next/link';
 
-export default function InvestorProfile() {
+export default function ResearcherProfile() {
   const { isLoggedIn, user } = useAuth();
   const router = useRouter();
+
+  const handleFunded = () => {
+    router.push("/fundedResearch");  // Arahkan ke halaman researcher
+  };
+
 
   // Cek status login dan role pengguna
   useEffect(() => {
     if (!isLoggedIn) {
       router.push("/login");
-    } else if (user?.role !== "Investor") {
-      router.push(user?.role === "Researcher" ? "/researcher/profile" : "/home");
+    } else if (user?.role !== "Researcher") {
+      router.push(user?.role === "Investor" ? "/investor/profile" : "/home");
     }
   }, [isLoggedIn, user, router]);
 
   // Jika belum selesai memeriksa otorisasi, tampilkan loading
-  if (!isLoggedIn || user?.role !== "Investor") {
+  if (!isLoggedIn || user?.role !== "Researcher") {
     return <div>Loading...</div>;
   }
 
@@ -138,19 +144,28 @@ export default function InvestorProfile() {
 
         {/* Tab Research */}
         <div className="flex space-x-4 mb-4">
-          <button
-            onClick={() => setActiveTab("ongoing")}
-            className={`px-4 py-2 ${activeTab === "ongoing" ? "text-blue-400 border-b-2 border-blue-400" : "text-gray-400"}`}
-          >
-            Ongoing Research
-          </button>
-          <button
-            onClick={() => setActiveTab("funded")}
-            className={`px-4 py-2 ${activeTab === "funded" ? "text-blue-400 border-b-2 border-blue-400" : "text-gray-400"}`}
-          >
-            Funded Research
-          </button>
-        </div>
+        <button
+          onClick={() => setActiveTab("ongoing")}
+          className={`px-4 py-2 border-b-2 transition-colors duration-200 ${
+            activeTab === "ongoing"
+              ? "text-blue-400 border-blue-400"
+              : "text-gray-400 border-transparent hover:text-blue-400 hover:border-blue-400"
+          }`}
+        >
+          Ongoing Research
+        </button>
+        <button
+          onClick={() => setActiveTab("funded")}
+          className={`px-4 py-2 border-b-2 transition-colors duration-200 ${
+            activeTab === "funded"
+              ? "text-blue-400 border-blue-400"
+              : "text-gray-400 border-transparent hover:text-blue-400 hover:border-blue-400"
+          }`}
+        >
+          Funded Research
+        </button>
+      </div>
+
 
         {/* Search Bar */}
         <div className="flex items-center justify-between mb-6">
@@ -177,16 +192,27 @@ export default function InvestorProfile() {
 
         {/* Daftar Penelitian */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {researchList.map((research) => (
-            <Card
-              key={research.id}
-              title={research.title}
-              description={research.description}
-              author={research.author}
-              date={research.date}
-              likes={research.likes}
-            />
-          ))}
+          {researchList.map((research) => {
+            const isFunded = activeTab !== "ongoing";
+            const cardElement = (
+              <Card
+                key={research.id}
+                title={research.title}
+                description={research.description}
+                author={research.author}
+                date={research.date}
+                likes={research.likes}
+              />
+            );
+
+            return isFunded ? (
+              <Link href="/fundedResearch" key={research.id} className="block hover:opacity-90 transition-opacity">
+                {cardElement}
+              </Link>
+            ) : (
+              <div key={research.id}>{cardElement}</div>
+            );
+          })}
         </div>
 
       </div>

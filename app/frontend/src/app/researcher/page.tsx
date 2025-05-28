@@ -6,22 +6,22 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export default function InvestorPage() {
+export default function ResearcherPage() {
   const { isLoggedIn, user } = useAuth();
-  const router = useRouter();
-  //Cek status login dan role pengguna
-  useEffect(() => {
-    if (!isLoggedIn) {
-      router.push("/login");
-    } else if (user?.role !== "Investor") {
-      router.push(user?.role === "Researcher" ? "/researcher" : "/home");
+    const router = useRouter();
+    // Cek status login dan role pengguna
+    useEffect(() => {
+      if (!isLoggedIn) {
+        router.push("/login");
+      } else if (user?.role !== "Researcher") {
+        router.push(user?.role === "Investor" ? "/investor" : "/home");
+      }
+    }, [isLoggedIn, user, router]);
+  
+    // Jika belum selesai memeriksa otorisasi, tampilkan loading
+    if (!isLoggedIn || user?.role !== "Researcher") {
+      return <div>Loading...</div>;
     }
-  }, [isLoggedIn, user, router]);
-
-  // Jika belum selesai memeriksa otorisasi, tampilkan loading
-  if (!isLoggedIn || user?.role !== "Investor") {
-    return <div>Loading...</div>;
-  }
 
   // Ini sementara doang
   const topics = [
@@ -33,7 +33,7 @@ export default function InvestorPage() {
   return(
     <div>
       {/* Bagian navbar */}
-      <NavbarComponent/>
+      <NavbarComponent />
 
       <div className="w-4xl mx-auto">
         <div className="pt-30 flex flex-col">
