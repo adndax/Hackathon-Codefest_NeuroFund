@@ -1,21 +1,33 @@
 "use client";
 import { NavigationBar }  from "@/components/Navbar";
-import { navItemsUnloggedIn } from "../../data/data";
+import { navItemsUnloggedIn, navItemsLoggedIn } from "../../data/data";
 import { BlueButton } from "@/components/Button";
 import { FeaturePlaceholder } from "@/components/FeaturePlaceholder";
 import { Header,Paragraph } from "@/components/Typography";
 import { useRouter } from 'next/navigation';
+import { useAuth } from "@/context/AuthContext";
 
 export default function LandingPage() {
   const router = useRouter();
+  const { isLoggedIn, user } = useAuth(); // Ambil status login dan user dari context
 
   const handleButtonClick = () => {
     router.push("/sign-up");
   };
 
+  // Tentukan navItems berdasarkan status login
+  const navItems = isLoggedIn 
+    ? navItemsLoggedIn(isLoggedIn, user?.role as "Researcher" | "Investor") 
+    : navItemsUnloggedIn;
+
   return (
   <div>
-    <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={false}/>
+    <NavigationBar 
+      navItems={navItems} 
+      current_item="Home" 
+      login={isLoggedIn}
+      role={user?.role as "Researcher" | "Investor"} // Pass role dari user object
+    />
       <div className="pt-40 flex flex-col items-center">
         <Header className="w-1/2 mx-auto">the Future: Fund Innovation, Empower Research</Header>
         <Paragraph className="px-50 mt-10">

@@ -1,7 +1,7 @@
 "use client";
 
 import { NavigationBar } from "@/components/Navbar";
-import { navItemsUnloggedIn } from "../../../data/data";
+import { navItemsUnloggedIn, navItemsLoggedIn } from "../../../data/data";
 import {Header, Paragraph} from "@/components/Typography";
 import Card from "./card";
 import { researchList } from "../../../data/data";
@@ -13,12 +13,14 @@ export default function ResearchPage() {
   const { isLoggedIn, user } = useAuth();
   const router = useRouter();
 
+  const navItems = isLoggedIn ? navItemsLoggedIn(user?.role as "Researcher" | "Investor") : navItemsUnloggedIn;
+  
   // Cek status login dan role pengguna
   useEffect(() => {
     if (!isLoggedIn) {
       router.push("/login");
     } else if (user?.role !== "Investor") {
-      router.push(user?.role === "Researcher" ? "/researcher/research" : "/home");
+      router.push(user?.role === "Researcher" ? "/researcher-research" : "/");
     }
   }, [isLoggedIn, user, router]);
 
@@ -44,7 +46,12 @@ export default function ResearchPage() {
   return (
     <div>
       {/* Bagian Navbar */}
-      <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={false}/>
+      <NavigationBar 
+        navItems={navItems} 
+        current_item="Research" 
+        login={isLoggedIn}
+        role={user?.role as "Researcher" | "Investor"} // Pass role dari user object
+      />
 
       <div className="max-w-7xl mx-auto">
         {/* Bagian Atas */}
@@ -56,11 +63,11 @@ export default function ResearchPage() {
             <span className="text-[#A7C4EC] content-center">All Research: </span>
             <input type="text"
               placeholder="Mie gacoan level 1" 
-              className="bg-[#F5F8FAB2] rounded-md w-[462px] h-[45px] pl-2"
+              className="bg-[#FFFFFF] text-black rounded-md w-[462px] h-[45px] pl-2"
             />
             <button className="px-4 py-2 text-gray-400">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
               </svg>
             </button>
           </div>
@@ -70,7 +77,7 @@ export default function ResearchPage() {
             <button className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-[#225491] transition">
               <span>Sort by</span>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
               </svg>
             </button>
             <button className="px-4 py-2 rounded-lg bg-[#225491] transition">

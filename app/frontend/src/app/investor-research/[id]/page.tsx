@@ -1,7 +1,7 @@
 "use client";
 
 import { NavigationBar } from "@/components/Navbar";
-import { navItemsUnloggedIn, researchList } from "@data";
+import { navItemsUnloggedIn, navItemsLoggedIn, researchList } from "@data";
 import { Header, Paragraph } from "@/components/Typography";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -12,14 +12,14 @@ import { useEffect } from "react";
 
 export default function ResearchDetailPage() {
   const { isLoggedIn, user } = useAuth();
-    const router = useRouter();
+  const router = useRouter();
   
     // Cek status login dan role pengguna
     useEffect(() => {
       if (!isLoggedIn) {
         router.push("/login");
       } else if (user?.role !== "Investor") {
-        router.push(user?.role === "Researcher" ? "/researcher/research" : "/home");
+        router.push(user?.role === "Researcher" ? "/researcher-research" : "/");
       }
     }, [isLoggedIn, user, router]);
   
@@ -30,7 +30,6 @@ export default function ResearchDetailPage() {
 
   const params = useParams();
   const { id } = params;
-  // const router = useRouter();
   const [isFundingModalOpen, setIsFundingModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
@@ -52,7 +51,7 @@ export default function ResearchDetailPage() {
     setTimeout(() => {
       setIsSuccessModalOpen(false);
       // Kembali ke halaman daftar penelitian setelah sukses
-      router.push("/investor/research");
+      router.push("/investor-research");
     }, 2000);
   };
 
@@ -61,49 +60,91 @@ export default function ResearchDetailPage() {
     setIsSuccessModalOpen(false);
   };
 
+  const navItems = isLoggedIn ? navItemsLoggedIn(user?.role as "Researcher" | "Investor") : navItemsUnloggedIn;
+
   return (
-    <div className="bg-gray-900 text-white">
+    <div className="min-h-screen text-white">
       {/* Bagian Navbar */}
-      <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={false}/>
+      <NavigationBar 
+        navItems={navItems} 
+        current_item="Research" 
+        login={isLoggedIn}
+        role={user?.role as "Researcher" | "Investor"} // Pass role dari user object
+      />
 
-      <div className="max-w-4xl mx-auto py-10 px-5">
+      <div className="max-w-6xl mx-auto py-10 px-5">
         {/* Judul Penelitian */}
-        <Header className="text-3xl font-bold mb-4 pb-20 pt-30">{research.title}</Header>
+        <Header className="text-4xl font-bold mb-8 pt-20 text-left">{research.title}</Header>
 
-        {/* Penulis dan Tanggal */}
+        {/* Garis pemisah */}
+        <hr className="border-gray-600 mb-6" />
+
+        {/* Author Info dan Action Buttons - Layout Horizontal */}
         <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-yellow-200 rounded-full"></div>
-            <span className="text-gray-400">{research.author}</span>
-            <span className="text-gray-400">{research.date}</span>
+          {/* Author Info - Kiri */}
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 bg-[#E6C798] rounded-full"></div>
+            <div>
+              <div className="text-white font-medium text-lg">{research.author}</div>
+              <div className="text-gray-400 text-sm">{research.date}</div>
+            </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={handleFundClick}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-            >
-              Fund this research
-            </button>
-            <div className="flex items-center space-x-1 bg-gray-500 rounded-full px-2 py-1">
-              <span className="text-white text-sm">{research.likes}</span>
-              <button className="p-1 rounded-full hover:bg-gray-600 transition">
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          
+          {/* Fund Button - Tengah */}
+          <button
+            onClick={handleFundClick}
+            className="px-8 py-3 bg-[#A7C4EC] text-[#0A1526] rounded-full hover:bg-[#95B8E0] transition font-medium text-lg"
+          >
+            Fund this research
+          </button>
+
+          {/* Action Buttons - Kanan */}
+          <div className="flex items-center space-x-4">
+            {/* Like/Dislike dengan angka */}
+            <div className="flex items-center space-x-2">
+              <span className="text-white text-lg font-medium">{research.likes}</span>
+              <button className="p-2 rounded-full hover:bg-gray-700 transition">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7"></path>
                 </svg>
               </button>
-              <button className="p-1 rounded-full hover:bg-gray-600 transition transform rotate-180">
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7"></path>
+              <button className="p-2 rounded-full hover:bg-gray-700 transition">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
               </button>
             </div>
+            
+            {/* Save Button */}
+            <button className="p-2 rounded-full hover:bg-gray-700 transition">
+              <img src="/save.png" alt="Save" className="w-6 h-8" />
+            </button>
           </div>
         </div>
 
-        {/* Konten Dokumen */}
-        <div className="bg-white text-black p-6 rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">{research.title}</h2>
-          <p className="text-gray-700 leading-relaxed">{research.description}</p>
+        {/* Konten Dokumen - Design Sederhana */}
+        <div className="bg-white text-black rounded-lg p-10 min-h-[600px]">
+          <h2 className="text-2xl font-bold mb-8 text-center">Abstract</h2>
+          <div className="prose max-w-none">
+            <p className="text-gray-700 leading-relaxed mb-8 text-justify">
+              {research.description}
+            </p>
+            <p className="text-gray-700 leading-relaxed mb-8 text-justify">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempus arcu nec elit sollicitudin porttitor. Etiam id quam quis tortor hendrerit rhoncus. Donec vel urna neque. Aliquam pellentesque varius felis a suscipit. Sed in risus eget nisi hendrerit porta. Praesent lacinia elit eget sollicitudin aliquet.
+            </p>
+            <p className="text-gray-700 leading-relaxed mb-8 text-justify">
+              Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Mauris viverra odio a purus. Donec lacinia nunc vel diam tempus, sit amet pulvinar magna rhoncus eget. Cras elementum pretium massa, quis porta eros consequat quis. Integer ac lorem quis nisi dignissim tempor.
+            </p>
+            <p className="text-gray-700 leading-relaxed mb-8 text-justify">
+              Fusce eu ligula ut dui convallis molestudas. Praesent lacinia elit eget sollicitudin aliquet. Curabitur tempus vel augue quis imperdiet. Nulla dictum nisl sit amet massa interdum, id tincidunt arcu suscipit. Sed ultricies, mauris vel bibendum consectetur, nunc nisi volutpat dolor, vel tempus magna.
+            </p>
+            <p className="text-gray-700 leading-relaxed mb-8 text-justify">
+              Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec auctor blandit quam. Aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+            </p>
+            <p className="text-gray-700 leading-relaxed text-justify">
+              Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
+            </p>
+          </div>
         </div>
       </div>
       

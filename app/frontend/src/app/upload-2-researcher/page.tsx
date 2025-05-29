@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { NavigationBar } from "@/components/Navbar";
-import { navItemsLoggedIn } from "../../../data/data";
+import { navItemsLoggedIn, navItemsUnloggedIn } from "@data";
 import { ImageIcon } from "lucide-react";
 import { NextDelButton } from "@/components/Button";
 import { InputText, TextArea } from "@/components/TextField";
@@ -14,6 +14,8 @@ import Image from 'next/image';
 export default function UploadResearcherPage() {
   const router = useRouter();
   const { setLogin, setUser } = useAuth();
+  const { isLoggedIn, user } = useAuth();
+  const navItems = isLoggedIn ? navItemsLoggedIn(user?.role as "Researcher" | "Investor") : navItemsUnloggedIn;
 
   const [formData, setFormData] = useState({
     title: "",
@@ -57,8 +59,12 @@ export default function UploadResearcherPage() {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <NavigationBar navItems={navItemsLoggedIn} current_item="Edit" login={true}/>
-
+      <NavigationBar 
+          navItems={navItems} 
+          current_item="Home" 
+          login={isLoggedIn}
+          role={user?.role as "Researcher" | "Investor"} // Pass role dari user object
+      />
       <div className="max-w-4xl mx-auto py-40 pl-20">
         <div className="space-y-6">
           <div className="flex flex-col md:flex-row gap-6">

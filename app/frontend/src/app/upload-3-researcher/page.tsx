@@ -1,11 +1,15 @@
 "use client";
 
 import { NavigationBar } from "@/components/Navbar";
-import { navItemsLoggedIn } from "../../../data/data";
+import { navItemsLoggedIn, navItemsUnloggedIn } from "@data";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function UploadResearcherPage() {
   const router = useRouter();
+  const { isLoggedIn, user } = useAuth();
+  const navItems = isLoggedIn ? navItemsLoggedIn(user?.role as "Researcher" | "Investor") : navItemsUnloggedIn;
+
 
   const handleSeeResearch = () => {
     router.push("/research"); // Ganti dengan rute yang sesuai untuk melihat penelitian
@@ -13,7 +17,12 @@ export default function UploadResearcherPage() {
 
   return (
     <div>
-      <NavigationBar navItems={navItemsLoggedIn} current_item="Research" login={true} />
+      <NavigationBar 
+          navItems={navItems} 
+          current_item="Home" 
+          login={isLoggedIn}
+          role={user?.role as "Researcher" | "Investor"} // Pass role dari user object
+      />
       <div className="min-h-screen text-white flex flex-col items-center justify-center">
       
       
