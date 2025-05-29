@@ -4,10 +4,20 @@ export const navItemsUnloggedIn = [
     { name: "About", link: "/about" },
 ];
 
-export const navItemsLoggedIn= [
-    { name: "Home", link: "/" },
+// Function to get nav items based on role
+export const navItemsLoggedIn = (isLoggedIn: boolean, role?: "Researcher" | "Investor") => [
+    { 
+        name: "Home", 
+        link: (() => {
+            if (!isLoggedIn) return "/";
+            return role === "Investor" ? "/investor" : "/researcher";
+        })()
+    },
     { name: "About", link: "/about" },
-    { name: "Research", link: "/research" },
+    { 
+        name: "Research", 
+        link: role === "Investor" ? "/investor-research" : "/researcher-research" 
+    },
 ];
 
 export const researcherIcons = [
