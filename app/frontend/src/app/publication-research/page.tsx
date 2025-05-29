@@ -2,16 +2,22 @@
 import { NavigationBar } from "@/components/Navbar";
 import { Header, Paragraph } from "@/components/Typography";
 import { FeaturePlaceholder } from "@/components/FeaturePlaceholder";
-import { AboutSection, Benefit, Testimonials } from "@/components/About";
 import { benefitsData, testimonials } from "@data";
-import { navItemsUnloggedIn } from "@data";
+import { navItemsUnloggedIn, navItemsLoggedIn } from "@data";
 import { useAuth } from "@/context/AuthContext";
 
 export default function Publication(){
+    const { isLoggedIn, user } = useAuth();
+    const navItems = isLoggedIn ? navItemsLoggedIn(user?.role as "Researcher" | "Investor") : navItemsUnloggedIn;
     return(
         <>
         {/* PAGENYA SEBENARNYA RESEARCH */}
-        <NavigationBar navItems={navItemsUnloggedIn} current_item="About" login={true}/>
+        <NavigationBar 
+            navItems={navItems} 
+            current_item="Home" 
+            login={isLoggedIn}
+            role={user?.role as "Researcher" | "Investor"} // Pass role dari user object
+        />
         <section className="py-32">
         <Header>Statistical Learning-Based 
             <br/>Analysis of Human Driver Model Parameters</Header>
@@ -40,7 +46,7 @@ export default function Publication(){
                 <span>↑</span>
                 <span>|</span>
                 <span>↓</span>
-                <span><img src="Vector.png" className="w-3 h-4"/></span>
+                <span><img src="save.png" className="w-3 h-4"/></span>
             </div>
             </div>
             <img src="abstract.png"/>

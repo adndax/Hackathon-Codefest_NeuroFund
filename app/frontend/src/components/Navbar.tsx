@@ -15,7 +15,7 @@ export const NavigationBar = ({current_item, navItems, login, role}: {current_it
     <NavBody>
     <NavbarLogo />
       
-      <NavItems items={navItems} name={current_item}/>
+      <NavItems items={navItems} name={current_item} role={role}/>
       <div className="flex items-center gap-6">
         <PannelIcon name={current_item} login={login} role={role}/>
         {!login && (<div className="flex items-center gap-4 mr-2">
@@ -39,15 +39,23 @@ export const NavigationBar = ({current_item, navItems, login, role}: {current_it
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
       >
-        {navItems.map((item, idx) => (
-          <a
-            key={`mobile-link-${idx}`}
-            href={item.link}
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <span className="block text-foreground cursor-pointer">{item.name}</span>
-          </a>
-        ))}
+        {navItems.map((item, idx) => {
+          // Tentukan link berdasarkan role untuk item Research
+          let linkHref = item.link;
+          if (item.name === "Research" && role) {
+            linkHref = role === "Investor" ? "/investor-research" : "/researcher-research";
+          }
+          
+          return (
+            <a
+              key={`mobile-link-${idx}`}
+              href={linkHref}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <span className="block text-foreground cursor-pointer">{item.name}</span>
+            </a>
+          );
+        })}
         {!login && (<div className="flex w-full flex-col gap-4">
           <NavbarButton
             href="/login"
@@ -123,7 +131,7 @@ export const NavBody = ({ children, className, visible }: { children: React.Reac
   );
 };
 
-export const NavItems = ({ items, className, onItemClick, name}: {items: {name: string, link: string}[], className?: string, onItemClick?: () => void, name: string;}) => {
+export const NavItems = ({ items, className, onItemClick, name, role}: {items: {name: string, link: string}[], className?: string, onItemClick?: () => void, name: string; role?: "Researcher" | "Investor";}) => {
   const [hovered, setHovered] = useState<number | null>(null);
   return (
     <motion.div
@@ -133,26 +141,34 @@ export const NavItems = ({ items, className, onItemClick, name}: {items: {name: 
         className,
       )}
     >
-      {items.map((item, idx) => (
-        <Link
-          onMouseEnter={() => setHovered(idx)}
-          onClick={onItemClick}
-          key={`link-${idx}`}
-          href={item.link}
-          className={cn(
-            "relative px-4 py-2 text-[16px] font-sans font-semibold hover:-translate-y-0.5",
-            item.name === name ? "bg-linear-to-b from-[#A7C4EC]/50 to-[#5F6F86]/50 rounded-full": "bg-transparent",
-          )}
-        >
-          {hovered === idx && (
-            <motion.div
-              layoutId="hovered"
-              className="absolute inset-0 h-full w-full rounded-full"
-            />
-          )}
-          <span className="relative z-10 px-3">{item.name}</span>
-        </Link>
-      ))}
+      {items.map((item, idx) => {
+        // Tentukan link berdasarkan role untuk item Research
+        let linkHref = item.link;
+        if (item.name === "Research" && role) {
+          linkHref = role === "Investor" ? "/investor-research" : "/researcher-research";
+        }
+
+        return (
+          <Link
+            onMouseEnter={() => setHovered(idx)}
+            onClick={onItemClick}
+            key={`link-${idx}`}
+            href={linkHref}
+            className={cn(
+              "relative px-4 py-2 text-[16px] font-sans font-semibold hover:-translate-y-0.5",
+              item.name === name ? "bg-linear-to-b from-[#A7C4EC]/50 to-[#5F6F86]/50 rounded-full": "bg-transparent",
+            )}
+          >
+            {hovered === idx && (
+              <motion.div
+                layoutId="hovered"
+                className="absolute inset-0 h-full w-full rounded-full"
+              />
+            )}
+            <span className="relative z-10 px-3">{item.name}</span>
+          </Link>
+        );
+      })}
     </motion.div>
   );
 }
@@ -270,7 +286,6 @@ export const NavbarButton = ({ href, as: Tag = "a", children, className, variant
 };
 
 export const PannelIcon = ({className, name, login, role}: {className?: string, name?: string, login: boolean, role?: "Researcher" | "Investor";}) => {
-
   const selectedIcons = role == "Researcher" ? researcherIcons : investorIcons;
 
   return (
@@ -293,7 +308,6 @@ export const PannelIcon = ({className, name, login, role}: {className?: string, 
 }
 
 export const PannelIconMobile = ({className, name, login, role}: {className?: string, name?: string, login: boolean, role?: "Researcher" | "Investor";}) => {
-
   const selectedIcons = role == "Researcher" ? researcherIcons : investorIcons;
 
   return (
@@ -318,18 +332,24 @@ export const PannelIconMobile = ({className, name, login, role}: {className?: st
 }
 
 export const TopRightProfile = ({login, role}: {login: boolean, role?: "Researcher" | "Investor";}) => {
+  // Tentukan link profile berdasarkan role
+  const profileLink = role === "Investor" ? "/investor-profile" : "/researcher-profile";
+  
   return (
     <>
-      {login && (<div className="flex items-center bg-white bg-opacity-10 rounded-full px-5 py-1.5">
-        <div className="w-11 h-11 rounded-full bg-[#E6C798] flex items-center justify-center text-gray-800 font-medium mr-2">
-          {role?.[0] ?? ""}
-        </div>
-        <div className="hidden sm:block px-1">
-          <div className="text-sm font-inter text-[#001124]/80 font-medium">Hi, Adinda!</div>
-          <div className="text-sm font-inter text-[#001124]/80 font-bold">{role}</div>
-        </div>
-      </div>)
-      }
+      {login && (
+        <Link href={profileLink}>
+          <div className="flex items-center bg-white bg-opacity-10 rounded-full px-5 py-1.5 cursor-pointer hover:bg-opacity-20 transition">
+            <div className="w-11 h-11 rounded-full bg-[#E6C798] flex items-center justify-center text-gray-800 font-medium mr-2">
+              {role?.[0] ?? ""}
+            </div>
+            <div className="hidden sm:block px-1">
+              <div className="text-sm font-inter text-[#001124]/80 font-medium">Hi, Adinda!</div>
+              <div className="text-sm font-inter text-[#001124]/80 font-bold">{role}</div>
+            </div>
+          </div>
+        </Link>
+      )}
     </>
   )
 }

@@ -38,7 +38,7 @@ function Card({ id, title, content, author, date, likes }: CardProps) {
 
   return (
     <div className="max-w-xl bg-gray-100 text-gray-900 rounded-lg p-6 shadow-md">
-      <Link href={`/investor/research/${id}`}>
+      <Link href={`/investor-research/${id}`}>
         <Header className="text-xl font-bold mb-2 text-justify">{title}</Header>
         <Paragraph className="text-gray-700 mb-4 text-justify">{content}</Paragraph>
       </Link>

@@ -1,7 +1,7 @@
 "use client";
 
 import { NavigationBar } from "@/components/Navbar";
-import { navItemsUnloggedIn } from "../../../data/data";
+import { navItemsUnloggedIn, navItemsLoggedIn } from "../../../data/data";
 import {Header, Paragraph} from "@/components/Typography";
 import Card from "./card";
 import { researchList } from "../../../data/data"
@@ -11,6 +11,9 @@ import { useEffect } from "react";
 
 export default function ResearchPage() {
   const { isLoggedIn, user } = useAuth();
+  const navItems = isLoggedIn 
+    ? navItemsLoggedIn(isLoggedIn, user?.role as "Researcher" | "Investor") 
+    : navItemsUnloggedIn;
   const router = useRouter();
   // Cek status login dan role pengguna
   useEffect(() => {
@@ -58,9 +61,13 @@ export default function ResearchPage() {
 
   return (
     <div>
-      {/* Bagian Navbar */}
-      <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={false}/>
-
+    {/* Bagian Navbar */}
+      <NavigationBar 
+          navItems={navItems} 
+          current_item="Research" 
+          login={isLoggedIn}
+          role={user?.role as "Researcher" | "Investor"} // Pass role dari user object
+      />
       <div className="w-7xl mx-auto">
         {/* Bagian Atas */}
         <Header className="pb-20 pt-30">Explore More Research</Header>
@@ -71,7 +78,7 @@ export default function ResearchPage() {
             <span className="text-[#A7C4EC] content-center">All Research: </span>
             <input type="text"
               placeholder="Mie gacoan level 1" 
-              className="bg-[#F5F8FAB2] rounded-md w-[462px] h-[45px] pl-2"
+              className="bg-[#FFFFFF] text-black rounded-md w-[462px] h-[45px] pl-2"
             />
             <button className="px-4 py-2 text-gray-400">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

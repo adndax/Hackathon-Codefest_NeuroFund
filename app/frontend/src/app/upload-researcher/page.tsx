@@ -3,13 +3,22 @@
 import Link from "next/link";
 import { Header, Paragraph } from "@/components/Typography"
 import { NavigationBar, PannelIcon } from "@/components/Navbar";
-import { navItemsUnloggedIn } from "@data";
+import { navItemsUnloggedIn, navItemsLoggedIn } from "@data";
+import { useAuth } from "@/context/AuthContext";
 
 export default function UploadResearcherPage() {
-
+  const { isLoggedIn, user } = useAuth();
+  const navItems = isLoggedIn 
+    ? navItemsLoggedIn(isLoggedIn, user?.role as "Researcher" | "Investor") 
+    : navItemsUnloggedIn;
   return (
         <>
-        <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={true} role="Researcher"/>
+      <NavigationBar 
+          navItems={navItems} 
+          current_item="Edit" 
+          login={isLoggedIn}
+          role={user?.role as "Researcher" | "Investor"} // Pass role dari user object
+      />
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-40 text-center">
         <Header>Share Your Research with the World</Header>

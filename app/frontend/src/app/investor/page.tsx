@@ -1,7 +1,7 @@
 "use client";
 
 import { NavigationBar } from "@/components/Navbar";
-import { navItemsUnloggedIn } from "@data";
+import { navItemsLoggedIn, navItemsUnloggedIn } from "@data";
 import {Header, Paragraph} from "@/components/Typography";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -31,11 +31,18 @@ export default function InvestorPage() {
     { key:3, name: "Culture", link: "/topics/academic"},
     { key:4, name: "Personal Growth", link: "/topics/academic"},
   ]
+
+  const navItems = isLoggedIn ? navItemsLoggedIn(user?.role as "Researcher" | "Investor") : navItemsUnloggedIn;
+
   return(
     <div>
       {/* Bagian navbar */}
-      <NavigationBar navItems={navItemsUnloggedIn} current_item="Home" login={true} role="Investor"/>
-
+      <NavigationBar 
+        navItems={navItems} 
+        current_item="Home" 
+        login={isLoggedIn}
+        role={user?.role as "Researcher" | "Investor"} // Pass role dari user object
+      />
       <div className="w-4xl mx-auto">
         <div className="pt-30 flex flex-col">
           {/* Bagian Atas */}

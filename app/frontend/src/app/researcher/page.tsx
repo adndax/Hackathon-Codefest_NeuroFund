@@ -1,14 +1,15 @@
 "use client";
 
 import { NavigationBar } from "@/components/Navbar";
-import { navItemsLoggedIn } from "@data";
+import { navItemsLoggedIn, navItemsUnloggedIn } from "@data";
 import {Header, Paragraph} from "@/components/Typography";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function ResearcherPage() {
-  const { isLoggedIn, user } = useAuth();
+    const { isLoggedIn, user } = useAuth();
+    const navItems = isLoggedIn ? navItemsLoggedIn(user?.role as "Researcher" | "Investor") : navItemsUnloggedIn;
     const router = useRouter();
     // Cek status login dan role pengguna
     useEffect(() => {
@@ -35,7 +36,12 @@ export default function ResearcherPage() {
     <div>
 
       <div className="w-4xl mx-auto">
-        <NavigationBar navItems={navItemsLoggedIn} current_item="Research" login={true} role="Researcher"/>
+        <NavigationBar 
+            navItems={navItems} 
+            current_item="Home" 
+            login={isLoggedIn}
+            role={user?.role as "Researcher" | "Investor"} // Pass role dari user object
+        />
         <div className="pt-30 flex flex-col">
           {/* Bagian Atas */}
           <Header className="w-full mx-auto">Search Research. Spark Impact.</Header>
