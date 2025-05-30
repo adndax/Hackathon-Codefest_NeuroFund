@@ -8,7 +8,9 @@ import { useAuth } from "@/context/AuthContext";
 
 export default function Publication(){
     const { isLoggedIn, user } = useAuth();
-    const navItems = isLoggedIn ? navItemsLoggedIn(user?.role as "Researcher" | "Investor") : navItemsUnloggedIn;
+    const navItems = isLoggedIn 
+        ? navItemsLoggedIn(isLoggedIn, user?.role as "Researcher" | "Investor") 
+        : navItemsUnloggedIn;
     return(
         <>
         {/* PAGENYA SEBENARNYA RESEARCH */}

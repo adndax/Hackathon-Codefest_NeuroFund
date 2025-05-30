@@ -10,7 +10,9 @@ export default function AboutPage(){
   const { isLoggedIn, user } = useAuth(); // Ambil status login dan user dari context
 
   // Tentukan navItems berdasarkan status login
-  const navItems = isLoggedIn ? navItemsLoggedIn(user?.role as "Researcher" | "Investor") : navItemsUnloggedIn;
+  const navItems = isLoggedIn 
+    ? navItemsLoggedIn(isLoggedIn, user?.role as "Researcher" | "Investor") 
+    : navItemsUnloggedIn;
 
   return (
     <>

@@ -32,7 +32,10 @@ export default function InvestorPage() {
     { key:4, name: "Personal Growth", link: "/topics/academic"},
   ]
 
-  const navItems = isLoggedIn ? navItemsLoggedIn(user?.role as "Researcher" | "Investor") : navItemsUnloggedIn;
+  const navItems = isLoggedIn 
+    ? navItemsLoggedIn(isLoggedIn, user?.role as "Researcher" | "Investor") 
+    : navItemsUnloggedIn;
+
 
   return(
     <div>

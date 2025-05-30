@@ -175,20 +175,20 @@ export default function ResearcherProfile() {
             className={`pb-2 text-lg font-medium border-b-2 transition ${
               activeTab === "ongoing" 
                 ? "text-[#A7C4EC] border-[#A7C4EC]" 
-                : "text-[#A7C4EC] border-[#A7C4EC]/30 hover:border-[#A7C4EC]/50"
+                : "text-gray-400 border-transparent hover:text-gray-300"
             }`}
           >
             Ongoing Research
           </button>
           <button
-            onClick={() => setActiveTab("published")}
+            onClick={() => setActiveTab("funded")}
             className={`pb-2 text-lg font-medium border-b-2 transition ${
-              activeTab === "published" 
+              activeTab === "funded" 
                 ? "text-[#A7C4EC] border-[#A7C4EC]" 
-                : "text-[#A7C4EC] border-[#A7C4EC]/30 hover:border-[#A7C4EC]/50"
+                : "text-gray-400 border-transparent hover:text-gray-300"
             }`}
           >
-            Published Research
+            Funded Research
           </button>
         </div>
 

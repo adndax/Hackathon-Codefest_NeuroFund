@@ -13,7 +13,9 @@ export default function ResearchPage() {
   const { isLoggedIn, user } = useAuth();
   const router = useRouter();
 
-  const navItems = isLoggedIn ? navItemsLoggedIn(user?.role as "Researcher" | "Investor") : navItemsUnloggedIn;
+  const navItems = isLoggedIn 
+    ? navItemsLoggedIn(isLoggedIn, user?.role as "Researcher" | "Investor") 
+    : navItemsUnloggedIn;
   
   // Cek status login dan role pengguna
   useEffect(() => {

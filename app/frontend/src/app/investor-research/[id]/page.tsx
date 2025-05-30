@@ -13,6 +13,12 @@ import { useEffect } from "react";
 export default function ResearchDetailPage() {
   const { isLoggedIn, user } = useAuth();
   const router = useRouter();
+  const params = useParams();
+  const { id } = params;
+  
+  const [isFundingModalOpen, setIsFundingModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   
     // Cek status login dan role pengguna
     useEffect(() => {
@@ -22,16 +28,22 @@ export default function ResearchDetailPage() {
         router.push(user?.role === "Researcher" ? "/researcher-research" : "/");
       }
     }, [isLoggedIn, user, router]);
+
+    // Handle success modal dengan auto redirect
+    useEffect(() => {
+      if (isSuccessModalOpen) {
+        const timer = setTimeout(() => {
+          setIsSuccessModalOpen(false);
+          router.push("/investor-profile");
+        }, 1500); // 3 detik delay
+        return () => clearTimeout(timer);
+      }
+    }, [isSuccessModalOpen, router]);
   
     // Jika belum selesai memeriksa otorisasi, tampilkan loading
     if (!isLoggedIn || user?.role !== "Investor") {
       return <div>Loading...</div>;
     }
-
-  const params = useParams();
-  const { id } = params;
-  const [isFundingModalOpen, setIsFundingModalOpen] = useState(false);
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   // Cari penelitian berdasarkan ID
   const research = researchList.find((item) => item.id === parseInt(id as string));
@@ -45,14 +57,10 @@ export default function ResearchDetailPage() {
   };
 
   const handleConfirmFunding = () => {
-    setIsFundingModalOpen(false);
-    setIsSuccessModalOpen(true);
-    // Simulasi pengiriman data ke server (bisa diganti dengan API call)
-    setTimeout(() => {
-      setIsSuccessModalOpen(false);
-      // Kembali ke halaman daftar penelitian setelah sukses
-      router.push("/investor-research");
-    }, 2000);
+    if (isChecked) {
+      setIsFundingModalOpen(false);
+      setIsSuccessModalOpen(true);
+    }
   };
 
   const handleCloseModal = () => {
@@ -60,7 +68,9 @@ export default function ResearchDetailPage() {
     setIsSuccessModalOpen(false);
   };
 
-  const navItems = isLoggedIn ? navItemsLoggedIn(user?.role as "Researcher" | "Investor") : navItemsUnloggedIn;
+  const navItems = isLoggedIn 
+    ? navItemsLoggedIn(isLoggedIn, user?.role as "Researcher" | "Investor") 
+    : navItemsUnloggedIn;
 
   return (
     <div className="min-h-screen text-white">
@@ -174,13 +184,23 @@ export default function ResearchDetailPage() {
             <p>🔗 <a href="#" className="text-blue-500 underline">View Agreement (PDF)</a></p>
           </div>
           <div className="flex items-center">
-            <input type="checkbox" id="agreement" className="mr-2" />
+            <input 
+              type="checkbox" 
+              id="agreement" 
+              className="mr-2" 
+              checked={isChecked}
+              onChange={(e) => setIsChecked(e.target.checked)}
+            />
             <label htmlFor="agreement">I have reviewed and agree to the funding terms</label>
           </div>
           <button
             onClick={handleConfirmFunding}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-            disabled={!(document.getElementById("agreement") as HTMLInputElement)?.checked}
+            className={`w-full py-2 rounded-lg transition ${
+              isChecked 
+                ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+            disabled={!isChecked}
           >
             Sign & Submit
           </button>
@@ -188,29 +208,20 @@ export default function ResearchDetailPage() {
       </Modal>
 
       {/* Modal Keberhasilan Pendanaan */}
-      <Modal
-        isOpen={isSuccessModalOpen}
-        onClose={handleCloseModal}
-        title=""
-      >
-        <div className="flex flex-col items-center space-y-4 bg-[#2A5A9B] p-6 rounded-lg">
-          <svg
-            className="w-16 h-16 text-green-400 border-4 border-green-400 rounded-lg p-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
-          <p className="text-center text-white text-xl font-semibold">Funding submitted!</p>
+      {isSuccessModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className="bg-[#225491] text-white p-8 rounded-2xl max-w-md mx-4 text-center space-y-6 relative">
+            <div className="flex justify-center">
+              <div className="bg-[#5CED73] p-4 rounded-2xl">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold">Funding submitted!</h2>
+          </div>
         </div>
-      </Modal>
+      )}
     </div>
   );
 }
