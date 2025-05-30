@@ -8,20 +8,21 @@ import { useAuth } from "@/context/AuthContext";
 export default function UploadResearcherPage() {
   const router = useRouter();
   const { isLoggedIn, user } = useAuth();
-  const navItems = isLoggedIn ? navItemsLoggedIn(user?.role as "Researcher" | "Investor") : navItemsUnloggedIn;
-
+  const navItems = isLoggedIn 
+    ? navItemsLoggedIn(isLoggedIn, user?.role as "Researcher" | "Investor") 
+    : navItemsUnloggedIn;
 
   const handleSeeResearch = () => {
-    router.push("/research"); // Ganti dengan rute yang sesuai untuk melihat penelitian
+    router.push("/researcher-profile"); // Ganti dengan rute yang sesuai untuk melihat penelitian
   };
 
   return (
     <div>
       <NavigationBar 
-          navItems={navItems} 
-          current_item="Home" 
-          login={isLoggedIn}
-          role={user?.role as "Researcher" | "Investor"} // Pass role dari user object
+        navItems={navItems} 
+        current_item="Edit" 
+        login={isLoggedIn}
+        role={user?.role as "Researcher" | "Investor"}
       />
       <div className="min-h-screen text-white flex flex-col items-center justify-center">
       

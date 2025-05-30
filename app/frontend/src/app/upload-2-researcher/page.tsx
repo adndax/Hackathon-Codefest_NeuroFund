@@ -15,7 +15,9 @@ export default function UploadResearcherPage() {
   const router = useRouter();
   const { setLogin, setUser } = useAuth();
   const { isLoggedIn, user } = useAuth();
-  const navItems = isLoggedIn ? navItemsLoggedIn(user?.role as "Researcher" | "Investor") : navItemsUnloggedIn;
+  const navItems = isLoggedIn 
+    ? navItemsLoggedIn(isLoggedIn, user?.role as "Researcher" | "Investor") 
+    : navItemsUnloggedIn;
 
   const [formData, setFormData] = useState({
     title: "",
@@ -35,7 +37,7 @@ export default function UploadResearcherPage() {
   };
 
   const handleSubmit = () => {
-    router.push("/upload-4-researcher");
+    router.push("/upload-3-researcher");
   };
 
   const handleDelete = () => {
@@ -60,10 +62,10 @@ export default function UploadResearcherPage() {
   return (
     <div className="min-h-screen bg-gray-900">
       <NavigationBar 
-          navItems={navItems} 
-          current_item="Home" 
-          login={isLoggedIn}
-          role={user?.role as "Researcher" | "Investor"} // Pass role dari user object
+        navItems={navItems} 
+        current_item="Edit" 
+        login={isLoggedIn}
+        role={user?.role as "Researcher" | "Investor"}
       />
       <div className="max-w-4xl mx-auto py-40 pl-20">
         <div className="space-y-6">

@@ -9,7 +9,9 @@ import { useEffect } from "react";
 
 export default function ResearcherPage() {
     const { isLoggedIn, user } = useAuth();
-    const navItems = isLoggedIn ? navItemsLoggedIn(user?.role as "Researcher" | "Investor") : navItemsUnloggedIn;
+    const navItems = isLoggedIn 
+      ? navItemsLoggedIn(isLoggedIn, user?.role as "Researcher" | "Investor") 
+      : navItemsUnloggedIn;
     const router = useRouter();
     // Cek status login dan role pengguna
     useEffect(() => {
