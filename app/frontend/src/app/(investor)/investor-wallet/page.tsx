@@ -6,7 +6,6 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-// Interface untuk transaction
 interface Transaction {
   id: number;
   type: "deposit" | "withdraw" | "investment" | "return";
@@ -16,7 +15,6 @@ interface Transaction {
   status: "completed" | "pending" | "failed";
 }
 
-// Mock data untuk demo (dalam ICP tokens)
 const mockTransactions: Transaction[] = [
   {
     id: 1,
@@ -59,30 +57,25 @@ export default function WalletPage() {
     ? navItemsLoggedIn(isLoggedIn, user?.role as "Researcher" | "Investor")
     : navItemsUnloggedIn;
 
-  // State untuk wallet (dalam ICP tokens)
   const [balance, setBalance] = useState(68.3);
   const [transactions, setTransactions] = useState<Transaction[]>(mockTransactions);
   const [activeTab, setActiveTab] = useState<"all" | "deposit" | "withdraw" | "investment">("all");
 
-  // Cek status login
   useEffect(() => {
     if (!isLoggedIn) {
       router.push("/login");
     }
   }, [isLoggedIn, router]);
 
-  // Jika belum login, tampilkan loading
   if (!isLoggedIn) {
     return <div>Loading...</div>;
   }
 
-  // Filter transactions berdasarkan tab
   const filteredTransactions = transactions.filter(transaction => {
     if (activeTab === "all") return true;
     return transaction.type === activeTab;
   });
 
-  // Format ICP tokens
   const formatICP = (amount: number) => {
     const absAmount = Math.abs(amount);
     return `${absAmount.toLocaleString('en-US', {
@@ -91,7 +84,6 @@ export default function WalletPage() {
     })} ICP`;
   };
 
-  // Get transaction icon
   const getTransactionIcon = (type: string) => {
     switch (type) {
       case "deposit":
@@ -107,7 +99,6 @@ export default function WalletPage() {
     }
   };
 
-  // Get transaction color
   const getTransactionColor = (type: string, amount: number) => {
     if (type === "deposit" || type === "return") return "text-green-400";
     if (type === "withdraw" || type === "investment") return "text-red-400";
