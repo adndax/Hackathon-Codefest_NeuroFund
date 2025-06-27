@@ -74,7 +74,7 @@ export default function InvestorPage() {
                 <div key={topicsterm.key} className="w-48 h-48 bg-[#A7C4EC] rounded-lg flex flex-col justify-end">
                   <div className="w-48 h-24 bg-gradient-to-b from-[#225491] to-[#225491] rounded-b-lg flex flex-col justify-end p-4 text-white">
                     <span className="text-lg font-medium">{topicsterm.name}</span>
-                    <a href={topicsterm.link} className="text-sm opacity-80 hover:underline">
+                    <a className="text-sm opacity-80 hover:underline">
                       View →
                     </a>
                   </div>

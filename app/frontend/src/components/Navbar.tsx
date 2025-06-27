@@ -271,8 +271,7 @@ export const NavbarButton = ({ href, as: Tag = "a", children, className, variant
   const variantStyles = {
     normal: "px-5 py-2 rounded-full bg-transparent button text-foreground font-sans text-[16px] font-semibold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center",
     mobile: "px-5 py-2 rounded-full bg-secondary button text-foreground font-sans text-[16px] font-semibold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center",
-    signup:
-      "bg-linear-to-b from-[#E6C798]/95 to-[#E6C798]/85 text-background bg-opacity-95",
+    signup: "min-w-[120px] px-6 py-2 bg-linear-to-b from-[#E6C798]/95 to-[#E6C798]/85 text-background bg-opacity-95 text-center font-semibold rounded-full hover:-translate-y-0.5 transition",
   };
 
   return (
