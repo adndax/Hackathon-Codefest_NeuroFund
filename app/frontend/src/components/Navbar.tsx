@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from 'next/link';
 import React, { useRef, useState } from "react";
 import { researcherIcons, investorIcons } from "@data";
+import { NotificationDropdown } from "./Notification";
 
 export const NavigationBar = ({current_item, navItems, login, role}: {current_item: string, navItems: { name: string; link: string }[], login: boolean, role?: "Researcher" | "Investor";}) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -270,8 +271,7 @@ export const NavbarButton = ({ href, as: Tag = "a", children, className, variant
   const variantStyles = {
     normal: "px-5 py-2 rounded-full bg-transparent button text-foreground font-sans text-[16px] font-semibold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center",
     mobile: "px-5 py-2 rounded-full bg-secondary button text-foreground font-sans text-[16px] font-semibold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center",
-    signup:
-      "bg-linear-to-b from-[#E6C798]/95 to-[#E6C798]/85 text-background bg-opacity-95",
+    signup: "min-w-[120px] px-6 py-2 bg-linear-to-b from-[#E6C798]/95 to-[#E6C798]/85 text-background bg-opacity-95 text-center font-semibold rounded-full hover:-translate-y-0.5 transition",
   };
 
   return (
@@ -287,49 +287,93 @@ export const NavbarButton = ({ href, as: Tag = "a", children, className, variant
 
 export const PannelIcon = ({className, name, login, role}: {className?: string, name?: string, login: boolean, role?: "Researcher" | "Investor";}) => {
   const selectedIcons = role == "Researcher" ? researcherIcons : investorIcons;
-
+  const [activeIcon, setActiveIcon] = useState<string | null>(null);
+  
+  const handleIconClick = (iconName: string) => {
+    setActiveIcon(activeIcon === iconName ? null : iconName);
+  };
+  
   return (
     <>
-      {selectedIcons.filter(i =>  login).map(i => (
-        <Link href={i.link} key={i.name}>
-          <button className={`${i.name === name ? "p-3 bg-gradient-to-b from-[#A7C4EC]/40 to-[#5F6F86]/40 rounded-full cursor-pointer hover:-translate-y-0.5" : "cursor-pointer hover:-translate-y-0.5"}`}>
-            <Image
-              src={i.src}
-              alt={i.alt}
-              width={30}
-              height={30}
-              className="opacity-80 hover:opacity-100"
+    <div className="flex w-full flex-row gap-2">
+      {selectedIcons.filter(i => login).map(i => {
+        if (i.isDropdown && i.name === "Notifications") {
+          return (
+            <NotificationDropdown 
+              key={i.name}
+              name={name}
+              iconName={i.name}
+              isActive={activeIcon === i.name}
+              className={`${activeIcon === i.name || i.name === name ? "p-3 bg-gradient-to-b from-[#A7C4EC]/40 to-[#5F6F86]/40 rounded-full cursor-pointer hover:-translate-y-0.5" : "p-3 rounded-full cursor-pointer hover:-translate-y-0.5"}`}
+              onToggle={() => handleIconClick(i.name)}
             />
-          </button>
-        </Link>
-    ))}
-    </> 
-  )
-}
+          );
+        }
+        
+        // Handle regular icons
+        return (
+          <Link href={i.link} key={i.name}>
+            <button 
+              onClick={() => handleIconClick(i.name)}
+              className={`${activeIcon === i.name || i.name === name ? "p-3 bg-gradient-to-b from-[#A7C4EC]/40 to-[#5F6F86]/40 rounded-full cursor-pointer hover:-translate-y-0.5" : "p-3 rounded-full cursor-pointer hover:-translate-y-0.5"}`}
+            >
+              <Image
+                src={i.src}
+                alt={i.alt}
+                width={30}
+                height={30}
+                className="opacity-80 hover:opacity-100"
+              />
+            </button>
+          </Link>
+        );
+        
+      })}
+    </div>
+    </>
+  );
+};
+
 
 export const PannelIconMobile = ({className, name, login, role}: {className?: string, name?: string, login: boolean, role?: "Researcher" | "Investor";}) => {
   const selectedIcons = role == "Researcher" ? researcherIcons : investorIcons;
+  const [activeIcon, setActiveIcon] = useState<string | null>(null);
+  
+  const handleIconClick = (iconName: string) => {
+    setActiveIcon(activeIcon === iconName ? null : iconName);
+  };
 
   return (
     <>
-    <div className="flex w-full flex-col gap-4">
-      {selectedIcons.filter(i => login).map((i) => (
-        <Link href={i.link} key={i.name} className="flex flex-col items-center">
-          <button className={`${i.name === name ? "w-full flex flex-col items-center p-3 bg-gradient-to-b from-[#A7C4EC]/40 to-[#5F6F86]/40 rounded-full cursor-pointer hover:-translate-y-0.5 hover:bg-primary" : "w-full flex flex-col items-center p-3 hover:bg-primary rounded-full cursor-pointer hover:-translate-y-0.5"}`}>
-            <Image 
-              src={i.src} 
-              alt={i.alt}
-              width={30} 
-              height={30} 
-              className="opacity-80 cursor-pointer hover:opacity-100"
+      {selectedIcons.filter(i => login).map((i) => {
+        if (i.isDropdown && i.name === "Notifications") {
+          return (
+            <NotificationDropdown
+              key={i.name}
+              name={name}
+              iconName={i.name}
+              isActive={activeIcon === i.name}
+              className={`${activeIcon === i.name || i.name === name ? "p-2 bg-gradient-to-b from-[#A7C4EC]/40 to-[#5F6F86]/40 rounded-full cursor-pointer hover:scale-105" : "p-2 rounded-full cursor-pointer hover:scale-105"}`}
+              onToggle={() => handleIconClick(i.name)}
             />
-          </button>
-        </Link>
-        ))}
-        </div>
-    </> 
-  )
-}
+          );
+        }
+        
+        // Handle regular icons
+        return (
+          <div key={i.name}>
+            <img 
+              src={i.src}
+              alt={i.alt}
+              onClick={() => handleIconClick(i.name)}
+              className={`${activeIcon === i.name || i.name === name ? "p-2 bg-gradient-to-b from-[#A7C4EC]/40 to-[#5F6F86]/40 rounded-full cursor-pointer hover:scale-105" : "p-2 rounded-full cursor-pointer hover:scale-105"}`}
+            />
+          </div>
+        );
+      })}
+    </>
+  );
+};
 
 export const TopRightProfile = ({login, role}: {login: boolean, role?: "Researcher" | "Investor";}) => {
   // Tentukan link profile berdasarkan role
@@ -344,8 +388,10 @@ export const TopRightProfile = ({login, role}: {login: boolean, role?: "Research
               {role?.[0] ?? ""}
             </div>
             <div className="hidden sm:block px-1">
-              <div className="text-sm font-inter text-[#001124]/80 font-medium">Hi, Adinda!</div>
-              <div className="text-sm font-inter text-[#001124]/80 font-bold">{role}</div>
+              <div className="text-sm font-inter text-[#001124]/80 font-medium whitespace-nowrap">
+                Hi, Adinda! 
+                <div className="text-sm font-inter text-[#001124]/80 font-bold">{role}</div>
+              </div>
             </div>
           </div>
         </Link>
