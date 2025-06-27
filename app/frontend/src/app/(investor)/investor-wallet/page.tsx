@@ -115,9 +115,9 @@ export default function WalletPage() {
         role={user?.role as "Researcher" | "Investor"}
       />
       
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Header */}
-        <Header className="pb-8 pt-8">My Wallet</Header>
+      <div className="max-w-7xl mx-auto">
+        {/* Bagian Atas */}
+        <Header className="pb-20 pt-30">My Wallet</Header>
         
         {/* Balance Card */}
         <div className="bg-gradient-to-r from-[#225491] to-[#2563eb] rounded-xl p-8 mb-8 shadow-xl">
