@@ -23,19 +23,19 @@ export const navItemsLoggedIn = (isLoggedIn: boolean, role?: "Researcher" | "Inv
 export const researcherIcons = [
     {
         name: "Edit",
-        src: "/pen_new_square.svg",
+        src: "/Edit.png",
         alt: "Edit",
         link: "/upload-researcher"
     },
     {
         name: "Message",
-        src: "/chat_round_line.svg",
+        src: "/Message.png",
         alt: "Message",
         link: "#"
     },
     {
         name: "Notifications",
-        src: "/bell_ring.svg",
+        src: "/Notifications.png",
         alt: "Notifications",
         link: "#"
     },
