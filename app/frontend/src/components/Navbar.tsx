@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from 'next/link';
 import React, { useRef, useState } from "react";
-import { icons } from "@data";
+import { researcherIcons, investorIcons } from "@data";
+import { NotificationDropdown } from "./Notification";
 
-export const NavigationBar = ({current_item, navItems, login}: {current_item: string, navItems: { name: string; link: string }[], login: boolean }) => {
+export const NavigationBar = ({current_item, navItems, login, role}: {current_item: string, navItems: { name: string; link: string }[], login: boolean, role?: "Researcher" | "Investor";}) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   return (
@@ -15,14 +16,14 @@ export const NavigationBar = ({current_item, navItems, login}: {current_item: st
     <NavBody>
     <NavbarLogo />
       
-      <NavItems items={navItems} name={current_item}/>
+      <NavItems items={navItems} name={current_item} role={role}/>
       <div className="flex items-center gap-6">
-        <PannelIcon name={current_item} login={login}/>
+        <PannelIcon name={current_item} login={login} role={role}/>
         {!login && (<div className="flex items-center gap-4 mr-2">
           <NavbarButton href="/login">Login</NavbarButton>
           <NavbarButton href="/sign-up" variant="signup">Sign up</NavbarButton>
         </div>)}
-        <TopRightProfile login={login} />
+        <TopRightProfile login={login} role={role}/>
       </div>
     </NavBody>
 
@@ -39,15 +40,23 @@ export const NavigationBar = ({current_item, navItems, login}: {current_item: st
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
       >
-        {navItems.map((item, idx) => (
-          <a
-            key={`mobile-link-${idx}`}
-            href={item.link}
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <span className="block text-foreground cursor-pointer">{item.name}</span>
-          </a>
-        ))}
+        {navItems.map((item, idx) => {
+          // Tentukan link berdasarkan role untuk item Research
+          let linkHref = item.link;
+          if (item.name === "Research" && role) {
+            linkHref = role === "Investor" ? "/investor-research" : "/researcher-research";
+          }
+          
+          return (
+            <a
+              key={`mobile-link-${idx}`}
+              href={linkHref}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <span className="block text-foreground cursor-pointer">{item.name}</span>
+            </a>
+          );
+        })}
         {!login && (<div className="flex w-full flex-col gap-4">
           <NavbarButton
             href="/login"
@@ -66,7 +75,7 @@ export const NavigationBar = ({current_item, navItems, login}: {current_item: st
             Sign up
           </NavbarButton>
         </div>)}
-        <PannelIconMobile name={current_item} login={login}/>
+        <PannelIconMobile name={current_item} login={login} role={role}/>
       </MobileNavMenu>
     </MobileNav>
   </Navbar>
@@ -123,7 +132,7 @@ export const NavBody = ({ children, className, visible }: { children: React.Reac
   );
 };
 
-export const NavItems = ({ items, className, onItemClick, name}: {items: {name: string, link: string}[], className?: string, onItemClick?: () => void, name: string;}) => {
+export const NavItems = ({ items, className, onItemClick, name, role}: {items: {name: string, link: string}[], className?: string, onItemClick?: () => void, name: string; role?: "Researcher" | "Investor";}) => {
   const [hovered, setHovered] = useState<number | null>(null);
   return (
     <motion.div
@@ -133,26 +142,34 @@ export const NavItems = ({ items, className, onItemClick, name}: {items: {name: 
         className,
       )}
     >
-      {items.map((item, idx) => (
-        <Link
-          onMouseEnter={() => setHovered(idx)}
-          onClick={onItemClick}
-          key={`link-${idx}`}
-          href={item.link}
-          className={cn(
-            "relative px-4 py-2 text-[16px] font-sans font-semibold hover:-translate-y-0.5",
-            item.name === name ? "bg-linear-to-b from-[#A7C4EC]/50 to-[#5F6F86]/50 rounded-full": "bg-transparent",
-          )}
-        >
-          {hovered === idx && (
-            <motion.div
-              layoutId="hovered"
-              className="absolute inset-0 h-full w-full rounded-full"
-            />
-          )}
-          <span className="relative z-10 px-3">{item.name}</span>
-        </Link>
-      ))}
+      {items.map((item, idx) => {
+        // Tentukan link berdasarkan role untuk item Research
+        let linkHref = item.link;
+        if (item.name === "Research" && role) {
+          linkHref = role === "Investor" ? "/investor-research" : "/researcher-research";
+        }
+
+        return (
+          <Link
+            onMouseEnter={() => setHovered(idx)}
+            onClick={onItemClick}
+            key={`link-${idx}`}
+            href={linkHref}
+            className={cn(
+              "relative px-4 py-2 text-[16px] font-sans font-semibold hover:-translate-y-0.5",
+              item.name === name ? "bg-linear-to-b from-[#A7C4EC]/50 to-[#5F6F86]/50 rounded-full": "bg-transparent",
+            )}
+          >
+            {hovered === idx && (
+              <motion.div
+                layoutId="hovered"
+                className="absolute inset-0 h-full w-full rounded-full"
+              />
+            )}
+            <span className="relative z-10 px-3">{item.name}</span>
+          </Link>
+        );
+      })}
     </motion.div>
   );
 }
@@ -254,8 +271,7 @@ export const NavbarButton = ({ href, as: Tag = "a", children, className, variant
   const variantStyles = {
     normal: "px-5 py-2 rounded-full bg-transparent button text-foreground font-sans text-[16px] font-semibold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center",
     mobile: "px-5 py-2 rounded-full bg-secondary button text-foreground font-sans text-[16px] font-semibold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center",
-    signup:
-      "bg-linear-to-b from-[#E6C798]/95 to-[#E6C798]/85 text-background bg-opacity-95",
+    signup: "min-w-[120px] px-6 py-2 bg-linear-to-b from-[#E6C798]/95 to-[#E6C798]/85 text-background bg-opacity-95 text-center font-semibold rounded-full hover:-translate-y-0.5 transition",
   };
 
   return (
@@ -269,60 +285,117 @@ export const NavbarButton = ({ href, as: Tag = "a", children, className, variant
   );
 };
 
-export const PannelIcon = ({className, name, login}: {className?: string, name?: string, login: boolean}) => {
+export const PannelIcon = ({className, name, login, role}: {className?: string, name?: string, login: boolean, role?: "Researcher" | "Investor";}) => {
+  const selectedIcons = role == "Researcher" ? researcherIcons : investorIcons;
+  const [activeIcon, setActiveIcon] = useState<string | null>(null);
+  
+  const handleIconClick = (iconName: string) => {
+    setActiveIcon(activeIcon === iconName ? null : iconName);
+  };
+  
   return (
     <>
-      {icons.filter(i =>  login).map(i => (
-        <Link href={i.link} key={i.name}>
-          <button className={`${i.name === name ? "p-3 bg-gradient-to-b from-[#A7C4EC]/40 to-[#5F6F86]/40 rounded-full cursor-pointer hover:-translate-y-0.5" : "cursor-pointer hover:-translate-y-0.5"}`}>
-            <Image
+    <div className="flex w-full flex-row gap-2">
+      {selectedIcons.filter(i => login).map(i => {
+        if (i.isDropdown && i.name === "Notifications") {
+          return (
+            <NotificationDropdown 
+              key={i.name}
+              name={name}
+              iconName={i.name}
+              isActive={activeIcon === i.name}
+              className={`${activeIcon === i.name || i.name === name ? "p-3 bg-gradient-to-b from-[#A7C4EC]/40 to-[#5F6F86]/40 rounded-full cursor-pointer hover:-translate-y-0.5" : "p-3 rounded-full cursor-pointer hover:-translate-y-0.5"}`}
+              onToggle={() => handleIconClick(i.name)}
+            />
+          );
+        }
+        
+        // Handle regular icons
+        return (
+          <Link href={i.link} key={i.name}>
+            <button 
+              onClick={() => handleIconClick(i.name)}
+              className={`${activeIcon === i.name || i.name === name ? "p-3 bg-gradient-to-b from-[#A7C4EC]/40 to-[#5F6F86]/40 rounded-full cursor-pointer hover:-translate-y-0.5" : "p-3 rounded-full cursor-pointer hover:-translate-y-0.5"}`}
+            >
+              <Image
+                src={i.src}
+                alt={i.alt}
+                width={30}
+                height={30}
+                className="opacity-80 hover:opacity-100"
+              />
+            </button>
+          </Link>
+        );
+        
+      })}
+    </div>
+    </>
+  );
+};
+
+
+export const PannelIconMobile = ({className, name, login, role}: {className?: string, name?: string, login: boolean, role?: "Researcher" | "Investor";}) => {
+  const selectedIcons = role == "Researcher" ? researcherIcons : investorIcons;
+  const [activeIcon, setActiveIcon] = useState<string | null>(null);
+  
+  const handleIconClick = (iconName: string) => {
+    setActiveIcon(activeIcon === iconName ? null : iconName);
+  };
+
+  return (
+    <>
+      {selectedIcons.filter(i => login).map((i) => {
+        if (i.isDropdown && i.name === "Notifications") {
+          return (
+            <NotificationDropdown
+              key={i.name}
+              name={name}
+              iconName={i.name}
+              isActive={activeIcon === i.name}
+              className={`${activeIcon === i.name || i.name === name ? "p-2 bg-gradient-to-b from-[#A7C4EC]/40 to-[#5F6F86]/40 rounded-full cursor-pointer hover:scale-105" : "p-2 rounded-full cursor-pointer hover:scale-105"}`}
+              onToggle={() => handleIconClick(i.name)}
+            />
+          );
+        }
+        
+        // Handle regular icons
+        return (
+          <div key={i.name}>
+            <img 
               src={i.src}
               alt={i.alt}
-              width={30}
-              height={30}
-              className="opacity-80 hover:opacity-100"
+              onClick={() => handleIconClick(i.name)}
+              className={`${activeIcon === i.name || i.name === name ? "p-2 bg-gradient-to-b from-[#A7C4EC]/40 to-[#5F6F86]/40 rounded-full cursor-pointer hover:scale-105" : "p-2 rounded-full cursor-pointer hover:scale-105"}`}
             />
-          </button>
-        </Link>
-    ))}
-    </> 
-  )
-}
+          </div>
+        );
+      })}
+    </>
+  );
+};
 
-export const PannelIconMobile = ({className, name, login}: {className?: string, name?: string, login: boolean}) => {
+export const TopRightProfile = ({login, role}: {login: boolean, role?: "Researcher" | "Investor";}) => {
+  // Tentukan link profile berdasarkan role
+  const profileLink = role === "Investor" ? "/investor-profile" : "/researcher-profile";
+  
   return (
     <>
-    <div className="flex w-full flex-col gap-4">
-      {icons.filter(i => login).map((i) => (
-        <Link href={i.link} key={i.name} className="flex flex-col items-center">
-          <button className={`${i.name === name ? "w-full flex flex-col items-center p-3 bg-gradient-to-b from-[#A7C4EC]/40 to-[#5F6F86]/40 rounded-full cursor-pointer hover:-translate-y-0.5 hover:bg-primary" : "w-full flex flex-col items-center p-3 hover:bg-primary rounded-full cursor-pointer hover:-translate-y-0.5"}`}>
-            <Image 
-              src={i.src} 
-              alt={i.alt}
-              width={30} 
-              height={30} 
-              className="opacity-80 cursor-pointer hover:opacity-100"
-            />
-          </button>
+      {login && (
+        <Link href={profileLink}>
+          <div className="flex items-center bg-white bg-opacity-10 rounded-full px-5 py-1.5 cursor-pointer hover:bg-opacity-20 transition">
+            <div className="w-11 h-11 rounded-full bg-[#E6C798] flex items-center justify-center text-gray-800 font-medium mr-2">
+              {role?.[0] ?? ""}
+            </div>
+            <div className="hidden sm:block px-1">
+              <div className="text-sm font-inter text-[#001124]/80 font-medium whitespace-nowrap">
+                Hi, Adinda! 
+                <div className="text-sm font-inter text-[#001124]/80 font-bold">{role}</div>
+              </div>
+            </div>
+          </div>
         </Link>
-        ))}
-        </div>
-    </> 
-  )
-}
-
-export const TopRightProfile = ({login}: {login: boolean}) => {
-  return (
-    <>
-      {login && (<div className="flex items-center bg-white bg-opacity-10 rounded-full px-5 py-1.5">
-        <div className="w-11 h-11 rounded-full bg-[#E6C798] flex items-center justify-center text-gray-800 font-medium mr-2">
-        </div>
-        <div className="hidden sm:block px-1">
-          <div className="text-sm font-inter text-[#001124]/80 font-medium">Hi, Adinda!</div>
-          <div className="text-sm font-inter text-[#001124]/80 font-bold">Researcher</div>
-        </div>
-      </div>)
-      }
+      )}
     </>
   )
 }
