@@ -2,9 +2,11 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-interface User {
+// ✅ Tambahkan walletAddress ke tipe User
+export interface User {
   name: string;
-  role: string;  // Misalnya 'admin' atau 'user'
+  role: string;
+  walletAddress?: string; // optional, bisa diisi atau tidak
 }
 
 interface AuthContextType {
