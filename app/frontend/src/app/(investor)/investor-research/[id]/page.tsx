@@ -20,6 +20,10 @@ export default function ResearchDetailPage() {
   const [walletBalance, setWalletBalance] = useState<number | null>(null);
   const [principalId, setPrincipalId] = useState<string | null>(null);
 
+  const canisterId = "uxrrr-q7777-77774-qaaaq-cai"; // Ganti sesuai backend
+
+  const research = researchList.find((item) => item.id === parseInt(id as string));
+
   // Auth check
   useEffect(() => {
     if (!isLoggedIn) {
@@ -29,15 +33,13 @@ export default function ResearchDetailPage() {
     }
   }, [isLoggedIn, user, router]);
 
-  // Wallet integration - Plug
+  // Connect Plug Wallet
   const connectWallet = async () => {
     try {
       if (!window.ic?.plug) return;
       const connected = await window.ic.plug.requestConnect();
       if (connected) {
-        await window.ic.plug.createAgent({
-          whitelist: ["rrkah-fqaaa-aaaaa-aaaaq-cai"], // contoh canister
-        });
+        await window.ic.plug.createAgent({ whitelist: [canisterId] });
         const principal = await window.ic.plug.getPrincipal();
         const balance = await window.ic.plug.requestBalance();
         setPrincipalId(principal.toText());
@@ -57,10 +59,30 @@ export default function ResearchDetailPage() {
     setIsFundingModalOpen(true);
   };
 
-  const handleConfirmFunding = () => {
-    if (isChecked) {
+  const handleConfirmFunding = async () => {
+    if (!isChecked || !window.ic?.plug || !principalId || !research) return;
+
+    try {
+      const projectTitle = research.title;
+      const amount = 500;
+
+      const principal = await window.ic.plug.getPrincipal();
+
+      await window.ic.plug.createAgent({
+        whitelist: [canisterId],
+      });
+
+      const result = await window.ic.plug.call(canisterId, {
+        methodName: "fund",
+        args: [projectTitle, amount, principal],
+      });
+
+      console.log("Funding success:", result);
       setIsFundingModalOpen(false);
       setIsSuccessModalOpen(true);
+    } catch (err: any) {
+      console.error("Funding failed:", err);
+      alert("Funding failed: " + err.message);
     }
   };
 
@@ -72,8 +94,6 @@ export default function ResearchDetailPage() {
   const navItems = isLoggedIn
     ? navItemsLoggedIn(isLoggedIn, user?.role as "Researcher" | "Investor")
     : navItemsUnloggedIn;
-
-  const research = researchList.find((item) => item.id === parseInt(id as string));
 
   if (!isLoggedIn || user?.role !== "Investor") return <div>Loading...</div>;
   if (!research) return <div>Research not found</div>;
