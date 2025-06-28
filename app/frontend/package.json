@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@rainbow-me/rainbowkit": "^2.2.8",
     "@tabler/icons-react": "^3.33.0",
+    "@tanstack/react-query": "^5.81.5",
     "clsx": "^2.1.1",
     "framer-motion": "^12.12.2",
     "lucide-react": "^0.511.0",
@@ -19,7 +21,9 @@
     "react-icons": "^5.5.0",
     "react-router": "^6.23.1",
     "react-router-dom": "^6.23.1",
-    "tailwind-merge": "^3.3.0"
+    "tailwind-merge": "^3.3.0",
+    "viem": "^2.31.4",
+    "wagmi": "^2.15.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
