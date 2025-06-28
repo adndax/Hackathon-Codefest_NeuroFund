@@ -7,6 +7,7 @@ import Link from 'next/link';
 import React, { useRef, useState } from "react";
 import { researcherIcons, investorIcons } from "@data";
 import { NotificationDropdown } from "./Notification";
+import { Profile, MobileProfile } from "./Profile";
 
 export const NavigationBar = ({current_item, navItems, login, role}: {current_item: string, navItems: { name: string; link: string }[], login: boolean, role?: "Researcher" | "Investor";}) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -23,7 +24,7 @@ export const NavigationBar = ({current_item, navItems, login, role}: {current_it
           <NavbarButton href="/login">Login</NavbarButton>
           <NavbarButton href="/sign-up" variant="signup">Sign up</NavbarButton>
         </div>)}
-        <TopRightProfile login={login} role={role}/>
+        <Profile login={login} role={role} />
       </div>
     </NavBody>
 
@@ -40,6 +41,7 @@ export const NavigationBar = ({current_item, navItems, login, role}: {current_it
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
       >
+        <MobileProfile login={login} role={role} onClose={() => setIsMobileMenuOpen(false)} />
         {navItems.map((item, idx) => {
           // Tentukan link berdasarkan role untuk item Research
           let linkHref = item.link;
@@ -53,7 +55,7 @@ export const NavigationBar = ({current_item, navItems, login, role}: {current_it
               href={linkHref}
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              <span className="block text-foreground cursor-pointer">{item.name}</span>
+              <span className="block hover:-translate-y-0.5 hover:text-foreground cursor-pointer text-gray-300">{item.name}</span>
             </a>
           );
         })}
@@ -345,6 +347,7 @@ export const PannelIconMobile = ({className, name, login, role}: {className?: st
 
   return (
     <>
+    <div className="flex flex-col items-center gap-2">
       {selectedIcons.filter(i => login).map((i) => {
         if (i.isDropdown && i.name === "Notifications") {
           return (
@@ -362,40 +365,43 @@ export const PannelIconMobile = ({className, name, login, role}: {className?: st
         // Handle regular icons
         return (
           <div key={i.name}>
-            <img 
+            <Image
               src={i.src}
               alt={i.alt}
+              width={45}
+              height={45}
               onClick={() => handleIconClick(i.name)}
               className={`${activeIcon === i.name || i.name === name ? "p-2 bg-gradient-to-b from-[#A7C4EC]/40 to-[#5F6F86]/40 rounded-full cursor-pointer hover:scale-105" : "p-2 rounded-full cursor-pointer hover:scale-105"}`}
             />
           </div>
         );
       })}
+      </div>
     </>
   );
 };
 
-export const TopRightProfile = ({login, role}: {login: boolean, role?: "Researcher" | "Investor";}) => {
-  // Tentukan link profile berdasarkan role
-  const profileLink = role === "Investor" ? "/investor-profile" : "/researcher-profile";
+// export const TopRightProfile = ({login, role}: {login: boolean, role?: "Researcher" | "Investor";}) => {
+//   // Tentukan link profile berdasarkan role
+//   const profileLink = role === "Investor" ? "/investor-profile" : "/researcher-profile";
   
-  return (
-    <>
-      {login && (
-        <Link href={profileLink}>
-          <div className="flex items-center bg-white bg-opacity-10 rounded-full px-5 py-1.5 cursor-pointer hover:bg-opacity-20 transition">
-            <div className="w-11 h-11 rounded-full bg-[#E6C798] flex items-center justify-center text-gray-800 font-medium mr-2">
-              {role?.[0] ?? ""}
-            </div>
-            <div className="hidden sm:block px-1">
-              <div className="text-sm font-inter text-[#001124]/80 font-medium whitespace-nowrap">
-                Hi, Adinda! 
-                <div className="text-sm font-inter text-[#001124]/80 font-bold">{role}</div>
-              </div>
-            </div>
-          </div>
-        </Link>
-      )}
-    </>
-  )
-}
+//   return (
+//     <>
+//       {login && (
+//         <Link href={profileLink}>
+//           <div className="flex items-center bg-white bg-opacity-10 rounded-full px-5 py-1.5 cursor-pointer hover:bg-opacity-20 transition">
+//             <div className="w-11 h-11 rounded-full bg-[#E6C798] flex items-center justify-center text-gray-800 font-medium mr-2">
+//               {role?.[0] ?? ""}
+//             </div>
+//             <div className="hidden sm:block px-1">
+//               <div className="text-sm font-inter text-[#001124]/80 font-medium whitespace-nowrap">
+//                 Hi, Adinda! 
+//                 <div className="text-sm font-inter text-[#001124]/80 font-bold">{role}</div>
+//               </div>
+//             </div>
+//           </div>
+//         </Link>
+//       )}
+//     </>
+//   )
+// }
