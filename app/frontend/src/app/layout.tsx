@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Open_Sans } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "../context/AuthContext";
+import { WalletProvider } from "./wallet-provider"; // ⬅️ Tambahkan ini
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,7 +27,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${openSans.variable} antialiased`}>
-        <AuthProvider>{children}</AuthProvider>
+        <WalletProvider> {/* ✅ Tambahkan ini */}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </WalletProvider>
       </body>
     </html>
   );
