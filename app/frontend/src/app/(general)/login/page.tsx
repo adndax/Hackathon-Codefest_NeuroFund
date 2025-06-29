@@ -8,13 +8,38 @@ import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
+const canisterId = "uxrrr-q7777-77774-qaaaq-cai"; // Ganti sesuai canistermu
+
 export default function LoginPage() {
   const router = useRouter();
-  const { setLogin, setUser } = useAuth();
+  const { setLogin, setUser, setPlugWalletData } = useAuth();
 
   const { isConnected, address } = useAccount();
   const [selectedRole, setSelectedRole] = useState<'Investor' | 'Researcher' | null>(null);
 
+  // Fungsi connect Plug Wallet
+  const connectPlugWallet = async () => {
+    if (!window.ic?.plug) {
+      alert("Please install Plug Wallet extension");
+      return;
+    }
+    try {
+      const connected = await window.ic.plug.requestConnect();
+      if (!connected) {
+        alert("Failed to connect Plug Wallet");
+        return;
+      }
+      await window.ic.plug.createAgent({ whitelist: [canisterId] });
+      const principal = await window.ic.plug.getPrincipal();
+      setPlugWalletData(window.ic.plug, principal.toText());
+      alert("Plug Wallet connected: " + principal.toText());
+    } catch (error) {
+      console.error("Plug Wallet connect error:", error);
+      alert("Error connecting Plug Wallet");
+    }
+  };
+
+  // Login dengan wagmi + rainbowkit wallet
   useEffect(() => {
     if (isConnected && address && selectedRole) {
       const user = {
@@ -70,6 +95,14 @@ export default function LoginPage() {
           <div className="flex justify-center mb-6">
             <ConnectButton chainStatus="icon" showBalance={false} />
           </div>
+
+          {/* Tombol Connect Plug Wallet */}
+          <button
+            onClick={connectPlugWallet}
+            className="mb-6 w-full py-3 rounded-xl bg-[#6e7ff4] text-white hover:bg-[#5869d6]"
+          >
+            Connect Plug Wallet (ICP)
+          </button>
 
           <p className="text-center text-sm text-gray-800">
             Do not have an account?{' '}

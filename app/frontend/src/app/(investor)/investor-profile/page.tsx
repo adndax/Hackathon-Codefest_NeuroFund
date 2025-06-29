@@ -6,9 +6,10 @@ import Card from "./card"
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { researchList } from "@data"; // Import untuk ongoing research data
 
 export default function InvestorProfile() {
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, user, fundedResearch } = useAuth();
   const router = useRouter();
 
   // Cek status login dan role pengguna
@@ -20,7 +21,7 @@ export default function InvestorProfile() {
     }
   }, [isLoggedIn, user, router]);
 
-    // Handler untuk tombol X
+  // Handler untuk tombol X
   const handleClose = () => {
     router.push("/investor");
   };
@@ -30,88 +31,27 @@ export default function InvestorProfile() {
     return <div>Loading...</div>;
   }
 
-  // Data untuk Ongoing Research
-  const ongoingResearchList = [
-    {
-      id: 1,
-      title: "Research Advances on the Role of Deep Learning in Materials Informatics",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Uploaded Jan, 12th 2025",
-      likes: 101,
-    },
-    {
-      id: 2,
-      title: "Research Advances on the Role of Deep Learning in Materials Informatics",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Uploaded Jan, 12th 2025",
-      likes: 101,
-    },
-    {
-      id: 3,
-      title: "Research Advances on the Role of Deep Learning in Materials Informatics",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Uploaded Jan, 12th 2025",
-      likes: 101,
-    },
-    {
-      id: 4,
-      title: "Research Advances on the Role of Deep Learning in Materials Informatics",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Uploaded Jan, 12th 2025",
-      likes: 101,
-    },
-  ];
-
-  // Data untuk Funded Research
-  const fundedResearchList = [
-    {
-      id: 5,
-      title: "Biomarker-Based Disease Detection Using AI",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Funded Mar, 15th 2024",
-      likes: 150,
-    },
-    {
-      id: 6,
-      title: "Multidisciplinary Approaches in Biotechnology",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Funded Apr, 20th 2024",
-      likes: 120,
-    },
-    {
-      id: 7,
-      title: "AI-Driven Solutions for Early Disease Detection",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Funded May, 10th 2024",
-      likes: 130,
-    },
-    {
-      id: 8,
-      title: "Impact of Deep Learning on Biotech Research",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Funded Jun, 5th 2024",
-      likes: 140,
-    },
-  ];
+  // Data untuk Ongoing Research (tetap menggunakan data dummy untuk research yang belum di-fund)
+  const ongoingResearchList = researchList.slice(0, 4).map(research => ({
+    id: research.id,
+    title: research.title,
+    description: research.description,
+    author: research.author,
+    date: research.date,
+    likes: research.likes,
+  }));
 
   // Pilih data berdasarkan tab aktif
   const [activeTab, setActiveTab] = useState("ongoing");
-  const researchList = activeTab === "ongoing" ? ongoingResearchList : fundedResearchList;
+  const researchListToShow = activeTab === "ongoing" ? ongoingResearchList : fundedResearch;
+
   return (
     <div className="min-h-screen text-white">
-            {/* X Button - Fixed positioning di pojok kanan atas */}
+      {/* X Button - Fixed positioning di pojok kanan atas */}
       <button
         onClick={handleClose}
         className="fixed top-6 right-6 z-50 w-10 h-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-200 group cursor-pointer"
-        aria-label="Close and return to researcher page"
+        aria-label="Close and return to investor page"
       >
         <svg 
           className="w-6 h-6 text-white group-hover:text-gray-200 transition-colors" 
@@ -127,6 +67,7 @@ export default function InvestorProfile() {
           />
         </svg>
       </button>
+      
       <div className="relative">
         {/* Background biru muda */}
         <div className="w-full h-40 bg-[#A7C4EC]"></div>
@@ -134,7 +75,9 @@ export default function InvestorProfile() {
         {/* Profile Photo - Lingkaran yang overlap */}
         <div className="absolute left-55 -bottom-8">
           <div className="w-24 h-24 rounded-full bg-[#E6C798] border-4 border-white flex items-center justify-center">
-            <span className="text-2xl font-bold text-gray-800">A</span>
+            <span className="text-2xl font-bold text-gray-800">
+              {user?.name?.charAt(0).toUpperCase() || "A"}
+            </span>
           </div>
         </div>
       </div>
@@ -145,8 +88,10 @@ export default function InvestorProfile() {
         <div className="flex justify-between items-start mb-6">
           {/* Kiri: Nama dan Role */}
           <div className="flex flex-col items-start">
-            <Header className="text-3xl font-bold mb-1">Adindashahira Asyraf</Header>
-            <Paragraph className="text-[#A7C4EC] text-lg">Investor</Paragraph>
+            <Header className="text-3xl font-bold mb-1">
+              {user?.name || "Adindashahira Asyraf"}
+            </Header>
+            <Paragraph className="text-[#A7C4EC] text-lg">{user?.role}</Paragraph>
           </div>
           
           {/* Kanan: Location */}
@@ -184,7 +129,7 @@ export default function InvestorProfile() {
                 : "text-gray-400 border-transparent hover:text-gray-300"
             }`}
           >
-            Funded Research
+            Funded Research ({fundedResearch.length})
           </button>
         </div>
 
@@ -195,7 +140,7 @@ export default function InvestorProfile() {
             <div className="flex items-center">
               <input
                 type="text"
-                placeholder="Mie gacoan level 1" 
+                placeholder="Search research..." 
                 className="bg-white text-black rounded-md w-80 h-10 px-3 focus:outline-none focus:ring-2 focus:ring-[#A7C4EC]"
               />
               <button className="ml-2 p-2 text-gray-400 hover:text-white transition">
@@ -221,17 +166,56 @@ export default function InvestorProfile() {
 
         {/* Research Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {researchList.map((research) => (
-            <Card
-              key={research.id}
-              title={research.title}
-              description={research.description}
-              author={research.author}
-              date={research.date}
-              likes={research.likes}
-            />
-          ))}
+          {researchListToShow.length === 0 ? (
+            <div className="col-span-full text-center py-12">
+              <div className="text-gray-400 text-lg">
+                {activeTab === "funded" 
+                  ? "No funded research yet. Start funding research to see them here!" 
+                  : "No ongoing research available."}
+              </div>
+            </div>
+          ) : (
+            researchListToShow.map((research, index) => (
+              <Card
+                key={research.id || `research-${index}`}
+                title={research.title}
+                description={research.description}
+                author={research.author}
+                date={activeTab === "funded" && 'fundingDate' in research 
+                  ? research.fundingDate 
+                  : research.date}
+                likes={research.likes}
+              />
+            ))
+          )}
         </div>
+
+        {/* Funding Summary untuk tab Funded Research */}
+        {activeTab === "funded" && fundedResearch.length > 0 && (
+          <div className="mt-8 bg-[#225491] rounded-lg p-6">
+            <h3 className="text-xl font-bold mb-4 text-white">Funding Summary</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+              <div className="bg-white/10 rounded-lg p-4">
+                <div className="text-2xl font-bold text-[#A7C4EC]">
+                  {fundedResearch.length}
+                </div>
+                <div className="text-gray-300">Projects Funded</div>
+              </div>
+              <div className="bg-white/10 rounded-lg p-4">
+                <div className="text-2xl font-bold text-[#A7C4EC]">
+                  {fundedResearch.reduce((total, research) => total + research.fundingAmount, 0)} ICP
+                </div>
+                <div className="text-gray-300">Total Invested</div>
+              </div>
+              <div className="bg-white/10 rounded-lg p-4">
+                <div className="text-2xl font-bold text-[#A7C4EC]">
+                  {(fundedResearch.reduce((total, research) => total + research.fundingAmount, 0) / fundedResearch.length).toFixed(0)} ICP
+                </div>
+                <div className="text-gray-300">Average per Project</div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   ) 

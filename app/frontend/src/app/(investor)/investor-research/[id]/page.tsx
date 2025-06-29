@@ -7,9 +7,10 @@ import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Modal from "../modal";
 import { useAuth } from "@/context/AuthContext";
+import type { FundedResearch } from "@/context/AuthContext";
 
 export default function ResearchDetailPage() {
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, user, plugWallet, principalId, addFundedResearch } = useAuth();
   const router = useRouter();
   const params = useParams();
   const { id } = params;
@@ -18,9 +19,9 @@ export default function ResearchDetailPage() {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [walletBalance, setWalletBalance] = useState<number | null>(null);
-  const [principalId, setPrincipalId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const canisterId = "uxrrr-q7777-77774-qaaaq-cai"; // Ganti sesuai backend
+  const canisterId = "u6s2n-gx777-77774-qaaba-cai"; // Ganti sesuai backend
 
   const research = researchList.find((item) => item.id === parseInt(id as string));
 
@@ -33,62 +34,94 @@ export default function ResearchDetailPage() {
     }
   }, [isLoggedIn, user, router]);
 
-  // Connect Plug Wallet
-  const connectWallet = async () => {
-    try {
-      if (!window.ic?.plug) return;
-      const connected = await window.ic.plug.requestConnect();
-      if (connected) {
-        await window.ic.plug.createAgent({ whitelist: [canisterId] });
-        const principal = await window.ic.plug.getPrincipal();
-        const balance = await window.ic.plug.requestBalance();
-        setPrincipalId(principal.toText());
-        const icp = balance.find((b) => b.name === "ICP");
-        setWalletBalance(icp?.amount || 0);
-      }
-    } catch (err) {
-      console.error("Wallet connect error", err);
-    }
-  };
-
+  // Ambil balance wallet dari plugWallet jika tersedia
   useEffect(() => {
-    connectWallet();
-  }, []);
+    const fetchBalance = async () => {
+      if (!plugWallet) return;
+      try {
+        const balance = await plugWallet.requestBalance();
+        const icp = balance.find((b: any) => b.name === "ICP");
+        setWalletBalance(icp?.amount || 0);
+      } catch (err) {
+        console.error("Failed to fetch wallet balance", err);
+      }
+    };
+    fetchBalance();
+  }, [plugWallet]);
 
   const handleFundClick = () => {
     setIsFundingModalOpen(true);
   };
 
   const handleConfirmFunding = async () => {
-    if (!isChecked || !window.ic?.plug || !principalId || !research) return;
+    if (!isChecked || !research) {
+      alert("Please agree to the funding terms");
+      return;
+    }
+
+    setIsLoading(true);
 
     try {
       const projectTitle = research.title;
       const amount = 500;
-
-      const principal = await window.ic.plug.getPrincipal();
-
-      await window.ic.plug.createAgent({
-        whitelist: [canisterId],
+      const currentDate = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
       });
 
-      const result = await window.ic.plug.call(canisterId, {
-        methodName: "fund",
-        args: [projectTitle, amount, principal],
-      });
+      // Simulasi funding jika plugWallet tidak tersedia
+      if (!plugWallet || !principalId) {
+        console.log("Simulating funding without Plug Wallet");
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        console.log("Simulated funding success:", {
+          project: projectTitle,
+          amount: amount,
+          user: user?.name || "Anonymous"
+        });
+      } else {
+        // Jika plugWallet tersedia, gunakan implementasi asli
+        await plugWallet.createAgent({
+          whitelist: [canisterId],
+        });
 
-      console.log("Funding success:", result);
+        const result = await plugWallet.call(canisterId, {
+          methodName: "fund",
+          args: [projectTitle, amount, principalId],
+        });
+
+        console.log("Funding success:", result);
+      }
+
+      // Tambahkan research yang sudah di-fund ke context
+      const fundedResearchData: FundedResearch = {
+        id: research.id,
+        title: research.title,
+        description: research.description,
+        author: research.author,
+        date: research.date,
+        likes: research.likes,
+        fundingAmount: amount,
+        fundingDate: `Funded ${currentDate}`,
+      };
+
+      addFundedResearch(fundedResearchData);
+
       setIsFundingModalOpen(false);
       setIsSuccessModalOpen(true);
     } catch (err: any) {
       console.error("Funding failed:", err);
       alert("Funding failed: " + err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleCloseModal = () => {
     setIsFundingModalOpen(false);
     setIsSuccessModalOpen(false);
+    setIsChecked(false);
   };
 
   const navItems = isLoggedIn
@@ -147,8 +180,13 @@ export default function ResearchDetailPage() {
           </div>
           <h3 className="font-semibold">Connected Wallet:</h3>
           <div className="bg-gray-100 p-4 rounded-lg">
-            <p>👤 Principal ID: {principalId || "Not connected"}</p>
-            <p>💼 Wallet Balance: {walletBalance !== null ? `${walletBalance} ICP` : "..."}</p>
+            <p>👤 Principal ID: {principalId || "Using alternative login"}</p>
+            <p>💼 Wallet Balance: {walletBalance !== null ? `${walletBalance} ICP` : "Using alternative balance"}</p>
+            {!plugWallet && (
+              <p className="text-sm text-orange-600 mt-2">
+                ℹ️ Using simulated funding (Plug Wallet not connected)
+              </p>
+            )}
           </div>
           <div className="flex items-center">
             <input
@@ -162,12 +200,14 @@ export default function ResearchDetailPage() {
           </div>
           <button
             onClick={handleConfirmFunding}
+            disabled={!isChecked || isLoading}
             className={`w-full py-2 rounded-lg transition ${
-              isChecked ? "bg-blue-600 text-white hover:bg-blue-700" : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              isChecked && !isLoading 
+                ? "bg-blue-600 text-white hover:bg-blue-700" 
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
-            disabled={!isChecked}
           >
-            Sign & Submit
+            {isLoading ? "Processing..." : "Sign & Submit"}
           </button>
         </div>
       </Modal>
@@ -184,6 +224,15 @@ export default function ResearchDetailPage() {
               </div>
             </div>
             <h2 className="text-2xl font-bold">Funding submitted!</h2>
+            <p className="text-sm text-gray-200">
+              This research has been added to your funded projects in your profile.
+            </p>
+            <button
+              onClick={handleCloseModal}
+              className="px-6 py-2 bg-white text-[#225491] rounded-lg hover:bg-gray-100 transition"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
