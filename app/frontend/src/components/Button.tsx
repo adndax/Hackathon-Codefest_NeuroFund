@@ -1,9 +1,10 @@
 import { cn } from "@/lib/utils";
 
-export const BlueButton = ({ children, className, onClick }: { children: React.ReactNode, className?: string, onClick?: () => void }) => {
+export const BlueButton = ({ children, className, onClick, disabled }: { children: React.ReactNode, className?: string, onClick?: () => void, disabled: boolean }) => {
   return (
     <button
       onClick={onClick}
+      disabled={true}
       className="px-12 py-3 mt-15 font-inter font-semibold text-[20px] rounded-md bg-[#A7C4EC] bg-opacity-85 text-background text-sm cursor-pointer hover:-translate-y-1 transform transition duration-200 hover:shadow-md z-10"
     >
       {children}

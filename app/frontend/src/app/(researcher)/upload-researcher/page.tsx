@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 export default function UploadResearcherPage() {
   const { isLoggedIn, user } = useAuth();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
@@ -33,15 +34,34 @@ export default function UploadResearcherPage() {
     }
   };
 
-  const handleSubmit = () => {
-    if (selectedFile) {
-      // Handle file upload logic here
-      console.log('Uploading file:', selectedFile.name);
-      // Navigate to upload-2-research page
+  const handleSubmit = async () => {
+    if (!selectedFile) return;
+    
+    setIsUploading(true);
+    
+    try {
+      // Simulate file upload process
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Store file in sessionStorage to pass to next step
+      const fileData = {
+        name: selectedFile.name,
+        size: selectedFile.size,
+        type: selectedFile.type,
+        lastModified: selectedFile.lastModified
+      };
+      
+      sessionStorage.setItem('uploadedFile', JSON.stringify(fileData));
+      
+      // Navigate to step 2 with file data
       router.push('/upload-2-researcher');
+    } catch (error) {
+      console.error('Upload failed:', error);
+      alert('Upload failed. Please try again.');
+    } finally {
+      setIsUploading(false);
     }
   };
-
   const handleRemoveFile = () => {
     setSelectedFile(null);
     if (fileInputRef.current) {
@@ -148,8 +168,11 @@ export default function UploadResearcherPage() {
         {/* Submit Button - Only show when file is selected */}
         {selectedFile && (
           <div className="mb-8">
-            <BlueButton onClick={handleSubmit}>
-              Submit Research
+            <BlueButton 
+              onClick={handleSubmit}
+              disabled={isUploading}
+            >
+              {isUploading ? 'Processing...' : 'Submit Research'}
             </BlueButton>
           </div>
         )}
