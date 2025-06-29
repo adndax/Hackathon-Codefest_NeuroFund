@@ -65,7 +65,7 @@ Before running the program, follow these steps:
     ```
 5. Open your browser and go to http://localhost:3000 to see the application running.
 
-## Made by NeuroFund Team
+## Made by ElectroIn Team
 - Adinda Putri
 - Fajar Asyraf
 - Heleni Gratia
