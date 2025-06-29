@@ -52,76 +52,78 @@ export default function ResearchDetailPage() {
   const handleFundClick = () => {
     setIsFundingModalOpen(true);
   };
+  
+const handleConfirmFunding = async () => {
+  if (!isChecked || !research) {
+    alert("Please agree to the funding terms");
+    return;
+  }
 
-  const handleConfirmFunding = async () => {
-    if (!isChecked || !research) {
-      alert("Please agree to the funding terms");
-      return;
-    }
+  setIsLoading(true);
 
-    setIsLoading(true);
+  try {
+    const projectTitle = research.title;
+    const amount = 500;
+    const currentDate = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
 
-    try {
-      const projectTitle = research.title;
-      const amount = 500;
-      const currentDate = new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
+    // Simulasi atau actual funding process
+    if (!plugWallet || !principalId) {
+      console.log("Simulating funding without Plug Wallet");
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    } else {
+      await plugWallet.createAgent({
+        whitelist: [canisterId],
       });
 
-      // Simulasi funding jika plugWallet tidak tersedia
-      if (!plugWallet || !principalId) {
-        console.log("Simulating funding without Plug Wallet");
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        console.log("Simulated funding success:", {
-          project: projectTitle,
-          amount: amount,
-          user: user?.name || "Anonymous"
-        });
-      } else {
-        // Jika plugWallet tersedia, gunakan implementasi asli
-        await plugWallet.createAgent({
-          whitelist: [canisterId],
-        });
-
-        const result = await plugWallet.call(canisterId, {
-          methodName: "fund",
-          args: [projectTitle, amount, principalId],
-        });
-
-        console.log("Funding success:", result);
-      }
-
-      // Tambahkan research yang sudah di-fund ke context
-      const fundedResearchData: FundedResearch = {
-        id: research.id,
-        title: research.title,
-        description: research.description,
-        author: research.author,
-        date: research.date,
-        likes: research.likes,
-        fundingAmount: amount,
-        fundingDate: `Funded ${currentDate}`,
-      };
-
-      addFundedResearch(fundedResearchData);
-
-      setIsFundingModalOpen(false);
-      setIsSuccessModalOpen(true);
-    } catch (err: any) {
-      console.error("Funding failed:", err);
-      alert("Funding failed: " + err.message);
-    } finally {
-      setIsLoading(false);
+      const result = await plugWallet.call(canisterId, {
+        methodName: "fund",
+        args: [projectTitle, amount, principalId],
+      });
+      console.log("Funding success:", result);
     }
-  };
+
+    // PENTING: Buat objek funded research dengan struktur yang benar
+    const fundedResearchData: FundedResearch = {
+      id: research.id,
+      title: research.title,
+      description: research.description,
+      author: research.author,
+      date: research.date, // Original upload date
+      likes: research.likes,
+      fundingAmount: amount,
+      fundingDate: `Funded ${currentDate}`, // New funding date
+    };
+
+    // Tambahkan ke context - ini yang penting!
+    console.log("Adding funded research to context:", fundedResearchData);
+    addFundedResearch(fundedResearchData);
+
+    // Tutup modal funding dan buka success modal
+    setIsFundingModalOpen(false);
+    setIsSuccessModalOpen(true);
+
+  } catch (err: any) {
+    console.error("Funding failed:", err);
+    alert("Funding failed: " + err.message);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleCloseModal = () => {
     setIsFundingModalOpen(false);
     setIsSuccessModalOpen(false);
     setIsChecked(false);
+  };
+
+  const handleSuccessClose = () => {
+    setIsSuccessModalOpen(false);
+    // Arahkan ke profile untuk melihat funded research
+    router.push("/investor-profile");
   };
 
   const navItems = isLoggedIn
@@ -227,12 +229,20 @@ export default function ResearchDetailPage() {
             <p className="text-sm text-gray-200">
               This research has been added to your funded projects in your profile.
             </p>
-            <button
-              onClick={handleCloseModal}
-              className="px-6 py-2 bg-white text-[#225491] rounded-lg hover:bg-gray-100 transition"
-            >
-              Close
-            </button>
+            <div className="flex space-x-3">
+              <button
+                onClick={handleCloseModal}
+                className="flex-1 px-6 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition"
+              >
+                Close
+              </button>
+              <button
+                onClick={handleSuccessClose}
+                className="flex-1 px-6 py-2 bg-white text-[#225491] rounded-lg hover:bg-gray-100 transition"
+              >
+                View Profile
+              </button>
+            </div>
           </div>
         </div>
       )}

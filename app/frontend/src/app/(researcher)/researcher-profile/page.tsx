@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function ResearcherProfile() {
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, user, userResearch, allResearch } = useAuth();
   const router = useRouter();
 
   // Cek status login dan role pengguna
@@ -30,81 +30,18 @@ export default function ResearcherProfile() {
     return <div>Loading...</div>;
   }
 
-  // Data untuk Ongoing Research
-  const ongoingResearchList = [
-    {
-      id: 1,
-      title: "Research Advances on the Role of Deep Learning in Materials Informatics",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Uploaded Jan, 12th 2025",
-      likes: 101,
-    },
-    {
-      id: 2,
-      title: "Research Advances on the Role of Deep Learning in Materials Informatics",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Uploaded Jan, 12th 2025",
-      likes: 101,
-    },
-    {
-      id: 3,
-      title: "Research Advances on the Role of Deep Learning in Materials Informatics",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Uploaded Jan, 12th 2025",
-      likes: 101,
-    },
-    {
-      id: 4,
-      title: "Research Advances on the Role of Deep Learning in Materials Informatics",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Uploaded Jan, 12th 2025",
-      likes: 101,
-    },
-  ];
-
-  // Data untuk Published Research
-  const publishedResearchList = [
-    {
-      id: 5,
-      title: "Biomarker-Based Disease Detection Using AI",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Published Mar, 15th 2024",
-      likes: 150,
-    },
-    {
-      id: 6,
-      title: "Multidisciplinary Approaches in Biotechnology",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Published Apr, 20th 2024",
-      likes: 120,
-    },
-    {
-      id: 7,
-      title: "AI-Driven Solutions for Early Disease Detection",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Published May, 10th 2024",
-      likes: 130,
-    },
-    {
-      id: 8,
-      title: "Impact of Deep Learning on Biotech Research",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Published Jun, 5th 2024",
-      likes: 140,
-    },
-  ];
+  // Filter research berdasarkan user dan status
+  const ongoingResearchList = userResearch.filter(research => 
+    research.status === 'ongoing' || research.status === 'published'
+  );
+  
+  const fundedResearchList = userResearch.filter(research => 
+    research.status === 'funded'
+  );
 
   // Pilih data berdasarkan tab aktif
   const [activeTab, setActiveTab] = useState("ongoing");
-  const researchList = activeTab === "ongoing" ? ongoingResearchList : publishedResearchList;
+  const researchList = activeTab === "ongoing" ? ongoingResearchList : fundedResearchList;
   
 
   return (
@@ -138,7 +75,9 @@ export default function ResearcherProfile() {
         {/* Profile Photo - Lingkaran yang overlap */}
         <div className="absolute left-55 -bottom-8">
           <div className="w-24 h-24 rounded-full bg-[#E6C798] border-4 border-white flex items-center justify-center">
-            <span className="text-2xl font-bold text-gray-800">A</span>
+            <span className="text-2xl font-bold text-gray-800">
+              {user?.name?.charAt(0).toUpperCase() || "R"}
+            </span>
           </div>
         </div>
       </div>
@@ -149,8 +88,10 @@ export default function ResearcherProfile() {
         <div className="flex justify-between items-start mb-6">
           {/* Kiri: Nama dan Role */}
           <div className="flex flex-col items-start">
-            <Header className="text-3xl font-bold mb-1">Adindashahira Asyraf</Header>
-            <Paragraph className="text-[#A7C4EC] text-lg">Researcher</Paragraph>
+            <Header className="text-3xl font-bold mb-1">
+              {user?.name || "Researcher Name"}
+            </Header>
+            <Paragraph className="text-[#A7C4EC] text-lg">{user?.role}</Paragraph>
           </div>
           
           {/* Kanan: Location */}
@@ -159,13 +100,15 @@ export default function ResearcherProfile() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
             </svg>
-            <span className="text-gray-400">Bandung, Institute of Technology</span>
+            <span className="text-gray-400">
+              {user?.location || "Bandung, Institute of Technology"}
+            </span>
           </div>
         </div>
 
         {/* Bio - Full Width */}
         <Paragraph className="text-gray-300 mb-8 text-justify leading-relaxed">
-          A biotechnology researcher with over 8 years of experience in developing early disease detection methods using biomarker-based approaches. Actively publishing in international journals and passionate about multidisciplinary collaborations that bring real-world impact to society.
+          {user?.bio || "A biotechnology researcher with over 8 years of experience in developing early disease detection methods using biomarker-based approaches. Actively publishing in international journals and passionate about multidisciplinary collaborations that bring real-world impact to society."}
         </Paragraph>
 
         {/* Tab Navigation - Left Aligned */}
@@ -178,7 +121,7 @@ export default function ResearcherProfile() {
                 : "text-gray-400 border-transparent hover:text-gray-300"
             }`}
           >
-            Ongoing Research
+            My Research ({ongoingResearchList.length})
           </button>
           <button
             onClick={() => setActiveTab("funded")}
@@ -188,7 +131,7 @@ export default function ResearcherProfile() {
                 : "text-gray-400 border-transparent hover:text-gray-300"
             }`}
           >
-            Funded Research
+            Funded Research ({fundedResearchList.length})
           </button>
         </div>
 
@@ -199,7 +142,7 @@ export default function ResearcherProfile() {
             <div className="flex items-center">
               <input
                 type="text"
-                placeholder="Mie gacoan level 1" 
+                placeholder="Search your research..." 
                 className="bg-white text-black rounded-md w-80 h-10 px-3 focus:outline-none focus:ring-2 focus:ring-[#A7C4EC]"
               />
               <button className="ml-2 p-2 text-gray-400 hover:text-white transition">
@@ -225,17 +168,70 @@ export default function ResearcherProfile() {
 
         {/* Research Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {researchList.map((research) => (
-            <Card
-              key={research.id}
-              title={research.title}
-              description={research.description}
-              author={research.author}
-              date={research.date}
-              likes={research.likes}
-            />
-          ))}
+          {researchList.length === 0 ? (
+            <div className="col-span-full text-center py-12">
+              <div className="text-gray-400 text-lg">
+                {activeTab === "ongoing" 
+                  ? "No research uploaded yet. Start uploading your research to see them here!"
+                  : "No funded research yet."}
+              </div>
+              {activeTab === "ongoing" && (
+                <div className="mt-4">
+                  <button 
+                    onClick={() => router.push('/upload-researcher')}
+                    className="px-6 py-2 bg-[#225491] text-white rounded-lg hover:bg-[#1e4a7f] transition font-medium"
+                  >
+                    Upload Research
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            researchList.map((research) => (
+              <Card
+                key={research.id}
+                title={research.title}
+                description={research.description}
+                author={research.author}
+                date={research.date}
+                likes={research.likes}
+              />
+            ))
+          )}
         </div>
+
+        {/* Research Statistics */}
+        {userResearch.length > 0 && (
+          <div className="mt-8 bg-[#225491] rounded-lg p-6">
+            <h3 className="text-xl font-bold mb-4 text-white">Research Statistics</h3>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+              <div className="bg-white/10 rounded-lg p-4">
+                <div className="text-2xl font-bold text-[#A7C4EC]">
+                  {userResearch.length}
+                </div>
+                <div className="text-gray-300">Total Research</div>
+              </div>
+              <div className="bg-white/10 rounded-lg p-4">
+                <div className="text-2xl font-bold text-[#A7C4EC]">
+                  {userResearch.filter(r => r.status === 'published').length}
+                </div>
+                <div className="text-gray-300">Published</div>
+              </div>
+              <div className="bg-white/10 rounded-lg p-4">
+                <div className="text-2xl font-bold text-[#A7C4EC]">
+                  {userResearch.filter(r => r.status === 'funded').length}
+                </div>
+                <div className="text-gray-300">Funded</div>
+              </div>
+              <div className="bg-white/10 rounded-lg p-4">
+                <div className="text-2xl font-bold text-[#A7C4EC]">
+                  {userResearch.reduce((total, research) => total + research.likes, 0)}
+                </div>
+                <div className="text-gray-300">Total Likes</div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   ) 

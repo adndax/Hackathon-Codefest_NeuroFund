@@ -1,18 +1,18 @@
 "use client"
 
-import { useState } from "react";
-import {Header, Paragraph} from "@/components/Typography";
-import Card from "./card"
+import { useState, useEffect } from "react";
+import { Header, Paragraph } from "@/components/Typography";
+import Card from "./card";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { researchList } from "@data"; // Import untuk ongoing research data
+import { researchList } from "@data";
 
 export default function InvestorProfile() {
-  const { isLoggedIn, user, fundedResearch } = useAuth();
+  const { isLoggedIn, user, fundedResearch = [] } = useAuth();
   const router = useRouter();
 
-  // Cek status login dan role pengguna
+  const [activeTab, setActiveTab] = useState("ongoing");
+
   useEffect(() => {
     if (!isLoggedIn) {
       router.push("/login");
@@ -21,17 +21,21 @@ export default function InvestorProfile() {
     }
   }, [isLoggedIn, user, router]);
 
-  // Handler untuk tombol X
-  const handleClose = () => {
-    router.push("/investor");
-  };
+  // Debug log to check fundedResearch
+  useEffect(() => {
+    console.log("Current fundedResearch:", fundedResearch);
+    console.log("FundedResearch length:", fundedResearch.length);
+  }, [fundedResearch]);
 
-  // Jika belum selesai memeriksa otorisasi, tampilkan loading
   if (!isLoggedIn || user?.role !== "Investor") {
     return <div>Loading...</div>;
   }
 
-  // Data untuk Ongoing Research (tetap menggunakan data dummy untuk research yang belum di-fund)
+  const handleClose = () => {
+    router.push("/investor");
+  };
+
+  // Get ongoing research from researchList
   const ongoingResearchList = researchList.slice(0, 4).map(research => ({
     id: research.id,
     title: research.title,
@@ -41,38 +45,33 @@ export default function InvestorProfile() {
     likes: research.likes,
   }));
 
-  // Pilih data berdasarkan tab aktif
-  const [activeTab, setActiveTab] = useState("ongoing");
+  // Determine which research list to show based on active tab
   const researchListToShow = activeTab === "ongoing" ? ongoingResearchList : fundedResearch;
 
   return (
     <div className="min-h-screen text-white">
-      {/* X Button - Fixed positioning di pojok kanan atas */}
       <button
         onClick={handleClose}
         className="fixed top-6 right-6 z-50 w-10 h-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-200 group cursor-pointer"
         aria-label="Close and return to investor page"
       >
-        <svg 
-          className="w-6 h-6 text-white group-hover:text-gray-200 transition-colors" 
-          fill="none" 
-          stroke="currentColor" 
+        <svg
+          className="w-6 h-6 text-white group-hover:text-gray-200 transition-colors"
+          fill="none"
+          stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            strokeWidth="2" 
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
             d="M6 18L18 6M6 6l12 12"
           />
         </svg>
       </button>
-      
+
       <div className="relative">
-        {/* Background biru muda */}
         <div className="w-full h-40 bg-[#A7C4EC]"></div>
-        
-        {/* Profile Photo - Lingkaran yang overlap */}
         <div className="absolute left-55 -bottom-8">
           <div className="w-24 h-24 rounded-full bg-[#E6C798] border-4 border-white flex items-center justify-center">
             <span className="text-2xl font-bold text-gray-800">
@@ -81,20 +80,15 @@ export default function InvestorProfile() {
           </div>
         </div>
       </div>
-      
-      {/* Content Section */}
+
       <div className="max-w-6xl mx-auto px-10 pt-12 pb-10">
-        {/* Profile Info - Layout Horizontal */}
         <div className="flex justify-between items-start mb-6">
-          {/* Kiri: Nama dan Role */}
           <div className="flex flex-col items-start">
             <Header className="text-3xl font-bold mb-1">
               {user?.name || "Adindashahira Asyraf"}
             </Header>
             <Paragraph className="text-[#A7C4EC] text-lg">{user?.role}</Paragraph>
           </div>
-          
-          {/* Kanan: Location */}
           <div className="flex items-center space-x-2">
             <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
@@ -104,18 +98,16 @@ export default function InvestorProfile() {
           </div>
         </div>
 
-        {/* Bio - Full Width */}
         <Paragraph className="text-gray-300 mb-8 text-justify leading-relaxed">
           A biotechnology researcher with over 8 years of experience in developing early disease detection methods using biomarker-based approaches. Actively publishing in international journals and passionate about multidisciplinary collaborations that bring real-world impact to society.
         </Paragraph>
 
-        {/* Tab Navigation - Left Aligned */}
         <div className="flex space-x-8 mb-6">
           <button
             onClick={() => setActiveTab("ongoing")}
             className={`pb-2 text-lg font-medium border-b-2 transition ${
-              activeTab === "ongoing" 
-                ? "text-[#A7C4EC] border-[#A7C4EC]" 
+              activeTab === "ongoing"
+                ? "text-[#A7C4EC] border-[#A7C4EC]"
                 : "text-gray-400 border-transparent hover:text-gray-300"
             }`}
           >
@@ -124,8 +116,8 @@ export default function InvestorProfile() {
           <button
             onClick={() => setActiveTab("funded")}
             className={`pb-2 text-lg font-medium border-b-2 transition ${
-              activeTab === "funded" 
-                ? "text-[#A7C4EC] border-[#A7C4EC]" 
+              activeTab === "funded"
+                ? "text-[#A7C4EC] border-[#A7C4EC]"
                 : "text-gray-400 border-transparent hover:text-gray-300"
             }`}
           >
@@ -133,14 +125,13 @@ export default function InvestorProfile() {
           </button>
         </div>
 
-        {/* Search and Filter Section */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-4">
             <span className="text-gray-400">All Research:</span>
             <div className="flex items-center">
               <input
                 type="text"
-                placeholder="Search research..." 
+                placeholder="Search research..."
                 className="bg-white text-black rounded-md w-80 h-10 px-3 focus:outline-none focus:ring-2 focus:ring-[#A7C4EC]"
               />
               <button className="ml-2 p-2 text-gray-400 hover:text-white transition">
@@ -150,7 +141,7 @@ export default function InvestorProfile() {
               </button>
             </div>
           </div>
-          
+
           <div className="flex space-x-4">
             <button className="flex items-center space-x-2 px-6 py-2 bg-[#225491] text-white rounded-lg hover:bg-[#1e4a7f] transition font-medium">
               <span>Sort by</span>
@@ -164,15 +155,19 @@ export default function InvestorProfile() {
           </div>
         </div>
 
-        {/* Research Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {researchListToShow.length === 0 ? (
             <div className="col-span-full text-center py-12">
               <div className="text-gray-400 text-lg">
-                {activeTab === "funded" 
-                  ? "No funded research yet. Start funding research to see them here!" 
+                {activeTab === "funded"
+                  ? "No funded research yet. Start funding research to see them here!"
                   : "No ongoing research available."}
               </div>
+              {activeTab === "funded" && (
+                <div className="mt-4 text-sm text-gray-500">
+                  <p>When you fund research from the research page, it will appear here.</p>
+                </div>
+              )}
             </div>
           ) : (
             researchListToShow.map((research, index) => (
@@ -181,16 +176,18 @@ export default function InvestorProfile() {
                 title={research.title}
                 description={research.description}
                 author={research.author}
-                date={activeTab === "funded" && 'fundingDate' in research 
-                  ? research.fundingDate 
-                  : research.date}
+                date={
+                  activeTab === "funded" && "fundingDate" in research
+                    ? `Funded on ${research.fundingDate}`
+                    : research.date
+                }
                 likes={research.likes}
               />
             ))
           )}
         </div>
 
-        {/* Funding Summary untuk tab Funded Research */}
+        {/* Funding Summary - Only show when there's funded research */}
         {activeTab === "funded" && fundedResearch.length > 0 && (
           <div className="mt-8 bg-[#225491] rounded-lg p-6">
             <h3 className="text-xl font-bold mb-4 text-white">Funding Summary</h3>
@@ -203,20 +200,44 @@ export default function InvestorProfile() {
               </div>
               <div className="bg-white/10 rounded-lg p-4">
                 <div className="text-2xl font-bold text-[#A7C4EC]">
-                  {fundedResearch.reduce((total, research) => total + research.fundingAmount, 0)} ICP
+                  {fundedResearch.reduce((total, research) => total + (research.fundingAmount || 0), 0).toLocaleString()} ICP
                 </div>
                 <div className="text-gray-300">Total Invested</div>
               </div>
               <div className="bg-white/10 rounded-lg p-4">
                 <div className="text-2xl font-bold text-[#A7C4EC]">
-                  {(fundedResearch.reduce((total, research) => total + research.fundingAmount, 0) / fundedResearch.length).toFixed(0)} ICP
+                  {fundedResearch.length > 0 
+                    ? Math.round(fundedResearch.reduce((total, research) => total + (research.fundingAmount || 0), 0) / fundedResearch.length).toLocaleString()
+                    : 0
+                  } ICP
                 </div>
                 <div className="text-gray-300">Average per Project</div>
               </div>
             </div>
           </div>
         )}
+
+        {/* Additional funding details for funded research */}
+        {activeTab === "funded" && fundedResearch.length > 0 && (
+          <div className="mt-6 bg-white/5 rounded-lg p-6">
+            <h4 className="text-lg font-semibold mb-4 text-white">Funding Details</h4>
+            <div className="space-y-3">
+              {fundedResearch.map((research) => (
+                <div key={research.id} className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                  <div>
+                    <h5 className="font-medium text-white">{research.title}</h5>
+                    <p className="text-sm text-gray-400">by {research.author}</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[#A7C4EC] font-semibold">{research.fundingAmount?.toLocaleString()} ICP</div>
+                    <div className="text-xs text-gray-400">{research.fundingDate}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
-  ) 
+  );
 }

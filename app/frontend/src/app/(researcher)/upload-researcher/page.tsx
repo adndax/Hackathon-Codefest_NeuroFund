@@ -10,7 +10,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 
 export default function UploadResearcherPage() {
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, user, setUploadData } = useAuth();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -33,12 +33,13 @@ export default function UploadResearcherPage() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleNext = () => {
     if (selectedFile) {
-      // Handle file upload logic here
-      console.log('Uploading file:', selectedFile.name);
-      // Navigate to upload-2-research page
+      // Simpan file ke context untuk digunakan di halaman berikutnya
+      setUploadData({ file: selectedFile });
       router.push('/upload-2-researcher');
+    } else {
+      alert('Please select a PDF file first.');
     }
   };
 
@@ -145,11 +146,11 @@ export default function UploadResearcherPage() {
           .
         </div>
 
-        {/* Submit Button - Only show when file is selected */}
+        {/* Next Button - Show when file is selected */}
         {selectedFile && (
-          <div className="mb-8">
-            <BlueButton onClick={handleSubmit}>
-              Submit Research
+          <div className="mb-8 mt-8">
+            <BlueButton onClick={handleNext}>
+              Next
             </BlueButton>
           </div>
         )}

@@ -21,10 +21,7 @@ interface ResearchItem {
 export default function ResearchPage() {
   const { isLoggedIn, user } = useAuth();
   const router = useRouter();
-  const navItems = isLoggedIn
-    ? navItemsLoggedIn(isLoggedIn, user?.role as "Researcher" | "Investor")
-    : navItemsUnloggedIn;
-
+  
   // State untuk search dan sort
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<keyof ResearchItem>("likes");
@@ -39,11 +36,6 @@ export default function ResearchPage() {
       router.push(user?.role === "Researcher" ? "/researcher-research" : "/");
     }
   }, [isLoggedIn, user, router]);
-
-  // Jika belum selesai memeriksa otorisasi, tampilkan loading
-  if (!isLoggedIn || user?.role !== "Investor") {
-    return <div>Loading...</div>;
-  }
 
   // Opsi sorting
   const sortOptions: { value: keyof ResearchItem; label: string }[] = [
@@ -104,6 +96,10 @@ export default function ResearchPage() {
     setShowSortDropdown(false);
   };
 
+  const navItems = isLoggedIn
+    ? navItemsLoggedIn(isLoggedIn, user?.role as "Researcher" | "Investor")
+    : navItemsUnloggedIn;
+
   function createCard(research: ResearchItem) {
     return (
       <Card
@@ -116,6 +112,11 @@ export default function ResearchPage() {
         likes={research.likes}
       />
     )
+  }
+
+  // Jika belum selesai memeriksa otorisasi, tampilkan loading
+  if (!isLoggedIn || user?.role !== "Investor") {
+    return <div>Loading...</div>;
   }
 
   return (
