@@ -58,3 +58,14 @@ turbo/
 ehthumbs.db
 Icon?
 Desktop.ini
+
+# DFX build artifacts
+.dfx/
+*.wasm
+*.wasm.gz
+*.did
+*.most
+*.mo
+
+# Canister config
+canister_ids.json
