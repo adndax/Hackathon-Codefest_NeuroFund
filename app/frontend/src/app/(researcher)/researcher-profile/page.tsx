@@ -1,14 +1,17 @@
 "use client"
 
-import { useState } from "react";
-import {Header, Paragraph} from "@/components/Typography";
-import Card from "./card"
+import { useState, useEffect } from "react";
+import { Header, Paragraph } from "@/components/Typography";
+import Card from "./card";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useResearch } from "@/context/ResearchContext";
+
+type TabType = "ongoing" | "funded";
 
 export default function ResearcherProfile() {
   const { isLoggedIn, user } = useAuth();
+  const { ongoingResearch, publishedResearch } = useResearch();
   const router = useRouter();
 
   // Cek status login dan role pengguna
@@ -30,83 +33,10 @@ export default function ResearcherProfile() {
     return <div>Loading...</div>;
   }
 
-  // Data untuk Ongoing Research
-  const ongoingResearchList = [
-    {
-      id: 1,
-      title: "Research Advances on the Role of Deep Learning in Materials Informatics",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Uploaded Jan, 12th 2025",
-      likes: 101,
-    },
-    {
-      id: 2,
-      title: "Research Advances on the Role of Deep Learning in Materials Informatics",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Uploaded Jan, 12th 2025",
-      likes: 101,
-    },
-    {
-      id: 3,
-      title: "Research Advances on the Role of Deep Learning in Materials Informatics",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Uploaded Jan, 12th 2025",
-      likes: 101,
-    },
-    {
-      id: 4,
-      title: "Research Advances on the Role of Deep Learning in Materials Informatics",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Uploaded Jan, 12th 2025",
-      likes: 101,
-    },
-  ];
-
-  // Data untuk Published Research
-  const publishedResearchList = [
-    {
-      id: 5,
-      title: "Biomarker-Based Disease Detection Using AI",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Published Mar, 15th 2024",
-      likes: 150,
-    },
-    {
-      id: 6,
-      title: "Multidisciplinary Approaches in Biotechnology",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Published Apr, 20th 2024",
-      likes: 120,
-    },
-    {
-      id: 7,
-      title: "AI-Driven Solutions for Early Disease Detection",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Published May, 10th 2024",
-      likes: 130,
-    },
-    {
-      id: 8,
-      title: "Impact of Deep Learning on Biotech Research",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      author: "Adindashahira Asyraf",
-      date: "Published Jun, 5th 2024",
-      likes: 140,
-    },
-  ];
-
   // Pilih data berdasarkan tab aktif
-  const [activeTab, setActiveTab] = useState("ongoing");
-  const researchList = activeTab === "ongoing" ? ongoingResearchList : publishedResearchList;
+  const [activeTab, setActiveTab] = useState<TabType>("ongoing");
+  const researchList = activeTab === "ongoing" ? ongoingResearch : publishedResearch;
   
-
   return (
     <div className="min-h-screen text-white">
       {/* X Button - Fixed positioning di pojok kanan atas */}
@@ -178,7 +108,7 @@ export default function ResearcherProfile() {
                 : "text-gray-400 border-transparent hover:text-gray-300"
             }`}
           >
-            Ongoing Research
+            Ongoing Research ({ongoingResearch.length})
           </button>
           <button
             onClick={() => setActiveTab("funded")}
@@ -188,7 +118,7 @@ export default function ResearcherProfile() {
                 : "text-gray-400 border-transparent hover:text-gray-300"
             }`}
           >
-            Funded Research
+            Published Research ({publishedResearch.length})
           </button>
         </div>
 
@@ -199,7 +129,7 @@ export default function ResearcherProfile() {
             <div className="flex items-center">
               <input
                 type="text"
-                placeholder="Mie gacoan level 1" 
+                placeholder="Search research..." 
                 className="bg-white text-black rounded-md w-80 h-10 px-3 focus:outline-none focus:ring-2 focus:ring-[#A7C4EC]"
               />
               <button className="ml-2 p-2 text-gray-400 hover:text-white transition">
@@ -224,18 +154,33 @@ export default function ResearcherProfile() {
         </div>
 
         {/* Research Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {researchList.map((research) => (
-            <Card
-              key={research.id}
-              title={research.title}
-              description={research.description}
-              author={research.author}
-              date={research.date}
-              likes={research.likes}
-            />
-          ))}
-        </div>
+        {researchList.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {researchList.map((research) => (
+              <Card
+                key={research.id}
+                title={research.title}
+                description={research.description}
+                author={research.author}
+                date={research.date}
+                likes={research.likes}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <Paragraph className="text-gray-400 mb-4">No research found</Paragraph>
+            <button 
+              onClick={() => router.push("/upload-researcher")}
+              className="px-6 py-2 bg-[#225491] text-white rounded-lg hover:bg-[#1e4a7f] transition font-medium"
+            >
+              Upload Your First Research
+            </button>
+          </div>
+        )}
       </div>
     </div>
   ) 
