@@ -14,15 +14,15 @@
 This website is designed to serve two main types of users: researchers and investors, leveraging Internet Computer Protocol (ICP) for secure login and investment processes.
 
 - **For Researchers**
-*Secure Research Upload*
+- *Secure Research Upload*, 
 Researchers can safely upload their research works (proposals, ongoing projects, or completed publications) to the platform. Uploaded files are securely stored and tamper-proof.
-*ICP Login Authentication*
+- *ICP Login Authentication*, 
 Researchers use their ICP wallet to log in and manage their research entries, ensuring a decentralized and secure identity system.
 
 - **For Investors**
-*Funding Research Projects*
+- *Funding Research Projects*, 
 Investors can browse through listed research projects and choose to fund the ones they are passionate about. Investment transactions are handled using ICP tokens directly on the platform.
-*ICP Wallet Integration*
+- *ICP Wallet Integration*, 
 Investors log in using their ICP wallet, enabling secure and verifiable interaction with the platform and researchers.
 
 ## Program Structure
