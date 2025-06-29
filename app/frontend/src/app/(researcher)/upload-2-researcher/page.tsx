@@ -58,7 +58,7 @@ export default function UploadResearcherPage() {
         setPdfFileName(fileData.name);
         
         // Auto-fill title with PDF name (without extension)
-        const titleFromPdf = fileData.name.replace(/\.[^/.]+$/, ""); // Remove file extension
+        const titleFromPdf = fileData.name.replace(/\.[^/.]+$/, "");
         setFormData(prev => ({
           ...prev,
           title: titleFromPdf
@@ -80,12 +80,10 @@ export default function UploadResearcherPage() {
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Create a new file with renamed based on PDF name
       const pdfNameWithoutExt = pdfFileName.replace(/\.[^/.]+$/, "");
       const imageExtension = file.name.split('.').pop();
       const newFileName = `${pdfNameWithoutExt}_cover.${imageExtension}`;
       
-      // Create a new File object with the new name
       const renamedFile = new File([file], newFileName, {
         type: file.type,
         lastModified: file.lastModified,
@@ -96,13 +94,11 @@ export default function UploadResearcherPage() {
   };
 
   const handleSubmit = () => {
-    // Validasi form
     if (!formData.title.trim()) {
       alert("Title is required!");
       return;
     }
 
-    // Add research to ongoing list (tanpa pdfFile property)
     addOngoingResearch({
       title: formData.title,
       topic: formData.topic,
@@ -110,20 +106,15 @@ export default function UploadResearcherPage() {
       image: imageFile
     });
 
-    // Store PDF info separately in localStorage for future reference
     const uploadedFileData = sessionStorage.getItem('uploadedFile');
     if (uploadedFileData) {
       const researchId = Date.now().toString();
       localStorage.setItem(`research_pdf_${researchId}`, uploadedFileData);
     }
 
-    // Clear sessionStorage
     sessionStorage.removeItem('uploadedFile');
-    
-    // Navigate to success page
     router.push("/upload-3-researcher");
     
-    // Reset form
     setFormData({
       title: "",
       topic: "",
@@ -133,15 +124,12 @@ export default function UploadResearcherPage() {
   };
 
   const handleDelete = () => {
-    // Reset form
     setFormData({
       title: "",
       topic: "",
       description: ""
     });
     setImageFile(null);
-    
-    // Clear sessionStorage
     sessionStorage.removeItem('uploadedFile');
     
     const userData: User = {
@@ -165,7 +153,6 @@ export default function UploadResearcherPage() {
       
       <div className="max-w-4xl mx-auto py-40 pl-20">
         <div className="space-y-6">
-          {/* Show PDF file info */}
           {pdfFileName && (
             <div className="bg-blue-900/20 border border-blue-700 rounded-lg p-4 mb-6">
               <p className="text-blue-300 text-sm">
@@ -190,8 +177,9 @@ export default function UploadResearcherPage() {
                   </div>
                 ) : (
                   <div className="text-center">
-                    <ImageIcon size={48} className="text-gray-600 mx-auto mb-2" />
-                    <p className="text-gray-500 text-sm">Cover Image</p>
+                    <p className="text-gray-500 text-sm truncate max-w-full">
+                      {pdfFileName || "No PDF selected"}
+                    </p>
                   </div>
                 )}
                 
