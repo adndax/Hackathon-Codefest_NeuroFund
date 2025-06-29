@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Open_Sans } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "../context/AuthContext";
+import { WalletProvider } from "./wallet-provider"; // ⬅️ Tambahkan ini
 import { ResearchProvider } from "@/context/ResearchContext";
 
 const inter = Inter({
@@ -27,11 +28,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${openSans.variable} antialiased`}>
-        <AuthProvider>
+        <WalletProvider> {/* ✅ Tambahkan ini */}
+          <AuthProvider>
+            
           <ResearchProvider>
             {children}
           </ResearchProvider>
-        </AuthProvider>
+        
+          </AuthProvider>
+        </WalletProvider>
       </body>
     </html>
   );

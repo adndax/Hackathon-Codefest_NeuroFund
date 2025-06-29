@@ -1,5 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 /.pnp
@@ -22,16 +20,19 @@
 
 # misc
 .DS_Store
+Thumbs.db
 *.pem
+*.log
 
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+.env
+.env.*  # .env.local, .env.development, etc.
 
 # vercel
 .vercel
@@ -39,3 +40,21 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDE/editor settings
+.vscode/
+.idea/
+*.swp
+
+# custom Plug types (if you don't want to commit it)
+# Uncomment if you want to exclude manually created types
+# /types/plug.d.ts
+
+# custom caches
+.cache/
+turbo/
+
+# OS-specific
+ehthumbs.db
+Icon?
+Desktop.ini

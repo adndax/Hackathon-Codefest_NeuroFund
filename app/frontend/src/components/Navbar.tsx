@@ -8,7 +8,7 @@ import React, { useRef, useState } from "react";
 import { researcherIcons, investorIcons } from "@data";
 import { NotificationDropdown } from "./Notification";
 
-export const NavigationBar = ({current_item, navItems, login, role}: {current_item: string, navItems: { name: string; link: string }[], login: boolean, role?: "Researcher" | "Investor";}) => {
+export const NavigationBar = ({current_item, navItems, login, role, username}: {current_item: string, navItems: { name: string; link: string }[], login: boolean, role?: "Researcher" | "Investor", username?: string;}) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   return (
@@ -23,7 +23,7 @@ export const NavigationBar = ({current_item, navItems, login, role}: {current_it
           <NavbarButton href="/login">Login</NavbarButton>
           <NavbarButton href="/sign-up" variant="signup">Sign up</NavbarButton>
         </div>)}
-        <TopRightProfile login={login} role={role}/>
+        <TopRightProfile login={login} role={role} username={username}/>
       </div>
     </NavBody>
 
@@ -375,9 +375,12 @@ export const PannelIconMobile = ({className, name, login, role}: {className?: st
   );
 };
 
-export const TopRightProfile = ({login, role}: {login: boolean, role?: "Researcher" | "Investor";}) => {
+export const TopRightProfile = ({login, role, username}: {login: boolean, role?: "Researcher" | "Investor", username?: string;}) => {
   // Tentukan link profile berdasarkan role
   const profileLink = role === "Investor" ? "/investor-profile" : "/researcher-profile";
+  
+  // Kapitalisasi nama untuk tampilan yang lebih baik
+  const displayName = username ? username.charAt(0).toUpperCase() + username.slice(1) : "User";
   
   return (
     <>
@@ -385,11 +388,11 @@ export const TopRightProfile = ({login, role}: {login: boolean, role?: "Research
         <Link href={profileLink}>
           <div className="flex items-center bg-white bg-opacity-10 rounded-full px-5 py-1.5 cursor-pointer hover:bg-opacity-20 transition">
             <div className="w-11 h-11 rounded-full bg-[#E6C798] flex items-center justify-center text-gray-800 font-medium mr-2">
-              {role?.[0] ?? ""}
+              {displayName[0]}
             </div>
             <div className="hidden sm:block px-1">
               <div className="text-sm font-inter text-[#001124]/80 font-medium whitespace-nowrap">
-                Hi, Adinda! 
+                Hi, {displayName}! 
                 <div className="text-sm font-inter text-[#001124]/80 font-bold">{role}</div>
               </div>
             </div>

@@ -15,6 +15,16 @@ interface FormData {
   description: string;
 }
 
+// Import atau define User interface jika belum ada
+interface User {
+  id: string;
+  name: string;
+  role: 'Researcher' | 'Investor';
+  email?: string;
+  location?: string;
+  bio?: string;
+}
+
 export default function UploadResearcherPage() {
   const router = useRouter();
   const { setLogin, setUser, isLoggedIn, user } = useAuth();
@@ -62,6 +72,7 @@ export default function UploadResearcherPage() {
       image: imageFile
     });
 
+    router.push("/upload-3-researcher");
     // Reset form
     setFormData({
       title: "",
@@ -70,8 +81,6 @@ export default function UploadResearcherPage() {
     });
     setImageFile(null);
 
-    // Navigate to profile
-    router.push("/researcher-profile");
   };
 
   const handleDelete = () => {
@@ -83,7 +92,12 @@ export default function UploadResearcherPage() {
     });
     setImageFile(null);
     
-    const userData = { name: "Adinda", role: "Researcher" };
+    // Fix: Properly type the userData object
+    const userData: User = {
+      id: "1", 
+      name: "Adinda", 
+      role: "Researcher" as const  // Ensure type safety
+    };
     setUser(userData);
     setLogin(true);
     router.push("/researcher");
@@ -95,7 +109,7 @@ export default function UploadResearcherPage() {
         navItems={navItems}
         current_item="Home"
         login={isLoggedIn}
-        role={user?.role as "Researcher" | "Investor"}
+        role={user?.role}  // Remove unnecessary casting since it's already the correct type
       />
       
       <div className="max-w-4xl mx-auto py-40 pl-20">

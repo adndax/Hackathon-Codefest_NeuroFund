@@ -1,59 +1,60 @@
-'use client';
+"use client";
 
-import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 
 export default function SignUpPage() {
   const router = useRouter();
-  const { setLogin, setUser } = useAuth();
 
-  const handleSignUpInvestor = () => {
-    const user = { name: "Adinda", role: "Investor" };
-    setUser(user);    
-    setLogin(true);  
-    router.push("/investor");
-  };
-
-  const handleSignUpResearcher = () => {
-    const user = { name: "Adinda", role: "Researcher" };
-    setUser(user);    
-    setLogin(true);  
-    router.push("/researcher");
+  const handleSignUp = () => {
+    // Langsung arahkan ke halaman login karena e-wallet akan digunakan di sana
+    router.push("/login");
   };
 
   return (
     <div className="flex min-h-screen bg-[#1a2a44] text-white font-sans flex-col items-center justify-center">
       {/* Judul */}
-      <h1 className="text-3xl font-semibold mb-12 text-white">Are you an Investor or a Researcher?</h1>
+      <h1 className="text-3xl font-semibold mb-12 text-white">
+        Are you an Investor or a Researcher?
+      </h1>
 
-      {/* Koontainer untuk dua kolom (investor dan researcher) */}
+      {/* Kontainer untuk dua kolom */}
       <div className="flex w-full max-w-4xl gap-20">
-        {/* Kolom kiri (investor) */}
+        {/* Investor */}
         <div className="flex-1 bg-[#e8eef6] rounded-2xl p-8 text-gray-800 flex flex-col items-center">
-          <div className="w-40 h-40 flex items-center justify-center text-2xl text-gray-600 mb-5">
-          <img src="investor.png"/>
+          <div className="w-40 h-40 flex items-center justify-center mb-5">
+            <img src="investor.png" alt="Investor" />
           </div>
           <p className="text-base leading-relaxed text-center mb-5 h-32 overflow-hidden">
-            Gain early access to groundbreaking research and support innovative projects. Connect with talented researchers, invest in ideas with impact, and help shape the future.
+            Gain early access to groundbreaking research and support innovative
+            projects. Connect with talented researchers, invest in ideas with
+            impact, and help shape the future.
           </p>
-          <button onClick={handleSignUpInvestor} className="w-full max-w-xs p-3 text-white rounded-lg text-base bg-[#4a6fa5] hover:bg-[#3a5f95]">
+          <button
+            onClick={handleSignUp}
+            className="w-full max-w-xs p-3 text-white rounded-lg text-base bg-[#4a6fa5] hover:bg-[#3a5f95]"
+          >
             Sign up as Investor
           </button>
         </div>
 
-        {/* Kolom kanan {researcher} */}
+        {/* Researcher */}
         <div className="flex-1 bg-[#e8eef6] rounded-2xl p-8 text-gray-800 flex flex-col items-center">
-          <div className="w-40 h-40 flex items-center justify-center text-2xl text-gray-600 mb-5">
-            <img src="researcher.png"/>
+          <div className="w-40 h-40 flex items-center justify-center mb-5">
+            <img src="researcher.png" alt="Researcher" />
           </div>
           <p className="text-base leading-relaxed text-center mb-5 h-32 overflow-hidden">
-          Showcase your innovative work, find funding opportunities, and collaborate with investors who believe in your vision. Turn your research into real-world impact.
+            Showcase your innovative work, find funding opportunities, and
+            collaborate with investors who believe in your vision. Turn your
+            research into real-world impact.
           </p>
-          <button onClick={handleSignUpResearcher} className="w-full max-w-xs p-3 text-white rounded-lg text-base bg-[#4a6fa5] hover:bg-[#3a5f95]">
+          <button
+            onClick={handleSignUp}
+            className="w-full max-w-xs p-3 text-white rounded-lg text-base bg-[#4a6fa5] hover:bg-[#3a5f95]"
+          >
             Sign up as Researcher
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }

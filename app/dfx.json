@@ -1,0 +1,13 @@
+{
+  "canisters": {
+    "backend": {
+      "type": "motoko",
+      "main": "backend/main.mo"
+    }
+  },
+  "defaults": {
+    "build": {}
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
