@@ -1,7 +1,7 @@
 <h1 align="center">NeuroFund</h1>
 
 <p align="center">
-  <img src="doc/img/neurofund.png" alt="RushHourSolver"/>
+  <img src="app/frontend/public/neurofund_logo.png" alt="NeuroFund"/>
 </p>
 
 ## Table of Contents
